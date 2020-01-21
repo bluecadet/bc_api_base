@@ -98,7 +98,7 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
 
       if (strpos($request->getRequestUri(), "/api/") === 0 || $request->getRequestUri() == "/api") {
         $data = [
-          'status' => '404',
+          'status' => 404,
           'error_msg' => 'Not Found',
           'full_msg' => $exception->getMessage(),
         ];
@@ -122,13 +122,12 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
     if (strpos($request->getRequestUri(), "/api/") === 0 || $request->getRequestUri() == "/api") {
 
       $data = [
-        'status' => $exception->getStatusCode(),
+        'status' => (int) $exception->getStatusCode(),
         'error_msg' => 'Access Denied',
       ];
       $response = new JsonResponse($data);
       $event->setResponse($response);
     }
-
   }
 
   /**
@@ -144,7 +143,7 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
 
     if (strpos($request->getRequestUri(), "/api/") === 0 || $request->getRequestUri() == "/api") {
       $data = [
-        'status' => $exception->getStatusCode(),
+        'status' => (int) $exception->getStatusCode(),
         'error_msg' => 'Not Found',
         'full_msg' => $exception->getMessage(),
       ];
