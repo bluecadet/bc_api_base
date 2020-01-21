@@ -14,6 +14,7 @@
   "require": {
     "php": "^7.0",
     "composer/installers": "^1.0@dev",
+    "drupal/key_auth": "^1.0",
     "oomphinc/composer-installers-extender": "~1.0"
   }
 }

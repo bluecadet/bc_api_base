@@ -4,3 +4,6 @@ description: Setup basic starter for a BC Api site.
 core: 8.x
 package: Bluecadet
 version: '8.x-1.0.0'
+
+dependencies:
+  - key_auth:key_auth
