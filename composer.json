@@ -1,0 +1,19 @@
+{
+  "name": "bluecadet/bc_api_base",
+  "description": "Base layer for all API implementations.",
+  "type": "custom-drupal-module",
+  "authors": [
+    {
+      "name": "Pete Inge",
+      "email": "pete.inge@gmail.com",
+      "role": "Maintainer"
+    }
+  ],
+  "license": "GPL-2.0+",
+  "minimum-stability": "dev",
+  "require": {
+    "php": "^7.0",
+    "composer/installers": "^1.0@dev",
+    "oomphinc/composer-installers-extender": "~1.0"
+  }
+}

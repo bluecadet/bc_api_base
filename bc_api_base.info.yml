@@ -1,4 +1,4 @@
-name: "Bluecadet API Base [Sub-module: BC Utilities]"
+name: "Bluecadet API Base"
 type: module
 description: Setup basic starter for a BC Api site.
 core: 8.x
