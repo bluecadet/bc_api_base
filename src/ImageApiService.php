@@ -66,17 +66,24 @@ class ImageApiService extends AssetApiServiceBase {
       $data = [
         'uri' => $file->getFileUri(),
         'url' => $file->url(),
-        'relative_path' => $this->getRelativePath($file->url()),
-        'orig_size' => [
+        'relativePath' => $this->getRelativePath($file->url()),
+        'origSize' => [
           'width' => $image_file->getWidth(),
           'height' => $image_file->getHeight(),
         ],
-        'crop' => ($anchor) ?: [],
+        'focalPoint' => ($anchor) ?: [],
       ];
 
       foreach ($image_styles as $style_name) {
         $style = ImageStyle::load($style_name);
-        $data[$style_name] = $style->buildUrl($file->getFileUri());
+
+        $url = $style->buildUrl($file->getFileUri());
+
+        $data[$style_name] = [
+          'uri' => $style->buildUri($file->getFileUri()),
+          'url' => $url,
+          'relativePath' => $this->getRelativePath($url),
+        ];
       }
     }
 

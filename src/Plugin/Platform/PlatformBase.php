@@ -4,13 +4,48 @@ namespace Drupal\bc_api_base\Plugin\Platform;
 
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\bc_api_base\Plugin\PlatformInterface;
 use Drupal\bc_api_base\Plugin\PlatformTransformInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Base Class for simple Platform PLugins.
  */
-class PlatformBase extends PluginBase implements PlatformInterface, PlatformTransformInterface {
+class PlatformBase extends PluginBase implements PlatformInterface, PlatformTransformInterface, ContainerFactoryPluginInterface {
+  /**
+   * Entity Manager.
+   *
+   * @var Drupal\Core\Entity\EntityManager
+   */
+  protected $entityManager;
+
+  /**
+   * Cache storage configs in case we need them again.
+   *
+   * @var array
+   */
+  protected $fieldStorageCache = [];
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, $entity_manager) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
+    $this->entityManager = $entity_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('entity.manager')
+    );
+  }
 
   /**
    * {@inheritdoc}
@@ -27,11 +62,7 @@ class PlatformBase extends PluginBase implements PlatformInterface, PlatformTran
       $data[] = $this->applyPlatformTransformations($val['value']);
     }
 
-    if (empty($data)) {
-      return NULL;
-    }
-
-    return (count($data) == 1) ? current($data) : $data;
+    return $this->processResult($entity, $field, $data);
   }
 
   /**
@@ -45,11 +76,7 @@ class PlatformBase extends PluginBase implements PlatformInterface, PlatformTran
       $data[] = (float) $val['value'];
     }
 
-    if (empty($data)) {
-      return NULL;
-    }
-
-    return (count($data) == 1) ? current($data) : $data;
+    return $this->processResult($entity, $field, $data);
   }
 
   /**
@@ -63,11 +90,7 @@ class PlatformBase extends PluginBase implements PlatformInterface, PlatformTran
       $data[] = (bool) $val['value'];
     }
 
-    if (empty($data)) {
-      $data[] = FALSE;
-    }
-
-    return (count($data) == 1) ? current($data) : $data;
+    return $this->processResult($entity, $field, $data);
   }
 
   /**
@@ -78,14 +101,10 @@ class PlatformBase extends PluginBase implements PlatformInterface, PlatformTran
     $data = [];
 
     foreach ($vals as $tax) {
-      $data[] = $this->applyPlatformTransformations($tax->label());
+      $data[] = (int) $tax->id();
     }
 
-    if (empty($data)) {
-      return NULL;
-    }
-
-    return (count($data) == 1) ? current($data) : $data;
+    return $this->processResult($entity, $field, $data);
   }
 
   /**
@@ -96,7 +115,14 @@ class PlatformBase extends PluginBase implements PlatformInterface, PlatformTran
     $data = [];
 
     foreach ($vals as $tax) {
-      if ($tax->hasField($subField)) {
+
+      if ($subField == 'id' || $subField == 'tid') {
+        $data[] = (int) $tax->id();
+      }
+      elseif ($subField == 'label') {
+        $data[] = $tax->label();
+      }
+      elseif ($tax->hasField($subField)) {
         $tax_value = $tax->get($subField)->getValue();
         if (is_array($tax_value)) {
           foreach ($tax_value as $value) {
@@ -117,11 +143,7 @@ class PlatformBase extends PluginBase implements PlatformInterface, PlatformTran
       }
     }
 
-    if (empty($data)) {
-      return NULL;
-    }
-
-    return (count($data) == 1) ? current($data) : $data;
+    return $this->processResult($entity, $field, $data);
   }
 
   /**
@@ -187,11 +209,7 @@ class PlatformBase extends PluginBase implements PlatformInterface, PlatformTran
       $data[] = !$unserializedText ? NULL : $unserializedText;
     }
 
-    if (empty($data)) {
-      return NULL;
-    }
-
-    return (count($data) == 1) ? current($data) : $data;
+    return $this->processResult($entity, $field, $data);
   }
 
   /**
@@ -251,6 +269,37 @@ class PlatformBase extends PluginBase implements PlatformInterface, PlatformTran
     }
 
     return $new_object;
+  }
+
+  /**
+   * Process the result for Single or multivalue fields.
+   */
+  private function processResult($entity, $field_name, $data) {
+
+    $storage_config_id = $entity->getEntityTypeId() . '.' . $field_name;
+
+    if (!isset($this->fieldStorageCache[$storage_config_id])) {
+      $this->fieldStorageCache[$storage_config_id] = $this->entityManager->getStorage('field_storage_config')->load($storage_config_id);
+    }
+
+    $cardinality = $this->fieldStorageCache[$storage_config_id]->getCardinality();
+
+    if ($cardinality == 1 && count($data) == 1) {
+      return current($data);
+    }
+    elseif ($cardinality == 1 && count($data) === 0) {
+      switch ($this->fieldStorageCache[$storage_config_id]->getType()) {
+        case "list_integer":
+        case "integer":
+          return NULL;
+
+        case "string":
+        default:
+          return "";
+      }
+    }
+
+    return $data;
   }
 
 }

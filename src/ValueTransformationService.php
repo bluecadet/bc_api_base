@@ -83,7 +83,7 @@ class ValueTransformationService {
    */
   public function taxFieldSubfieldVal($entity, string $field, string $subField) {
     $this->checkPlatform();
-    return $this->plugin->taxFieldSubfieldVal($entity, $field);
+    return $this->plugin->taxFieldSubfieldVal($entity, $field, $subField);
   }
 
   /**
