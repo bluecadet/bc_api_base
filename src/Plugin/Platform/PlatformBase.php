@@ -96,6 +96,20 @@ class PlatformBase extends PluginBase implements PlatformInterface, PlatformTran
   /**
    * {@inheritdoc}
    */
+  public function simpleEntityRefFieldVal($entity, string $field) {
+    $vals = $entity->get($field)->referencedEntities();
+    $data = [];
+
+    foreach ($vals as $entity) {
+      $data[] = (int) $entity->id();
+    }
+
+    return $this->processResult($entity, $field, $data);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function taxFieldVal($entity, string $field) {
     $vals = $entity->get($field)->referencedEntities();
     $data = [];
@@ -184,14 +198,19 @@ class PlatformBase extends PluginBase implements PlatformInterface, PlatformTran
     $config = \Drupal::config('system.date');
     $config_data_default_timezone = $config->get('timezone.default');
 
-    $created = DateTimePlus::createFromTimestamp($entity->getCreatedTime(), $config_data_default_timezone);
+    $created_val = NULL;
+    if (method_exists($entity, "getCreatedTime")) {
+      $created = DateTimePlus::createFromTimestamp($entity->getCreatedTime(), $config_data_default_timezone);
+      $created->setTimezone(new \DateTimeZone('UTC'));
+      $created_val = $created->format('Y-m-d\TH:i:s\Z');
+    }
+
     $changed = DateTimePlus::createFromTimestamp($entity->getChangedTime(), $config_data_default_timezone);
 
     // Set Timezone to UTC.
-    $created->setTimezone(new \DateTimeZone('UTC'));
     $changed->setTimezone(new \DateTimeZone('UTC'));
 
-    return [$created->format('Y-m-d\TH:i:s\Z'), $changed->format('Y-m-d\TH:i:s\Z')];
+    return [$created_val, $changed->format('Y-m-d\TH:i:s\Z')];
   }
 
   /**

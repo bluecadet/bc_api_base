@@ -73,6 +73,14 @@ class ValueTransformationService {
   /**
    * Get Value of a taxonomy ref field, properlly transformed.
    */
+  public function simpleEntityRefFieldVal($entity, string $field) {
+    $this->checkPlatform();
+    return $this->plugin->simpleEntityRefFieldVal($entity, $field);
+  }
+
+  /**
+   * Get Value of a taxonomy ref field, properlly transformed.
+   */
   public function taxFieldVal($entity, string $field) {
     $this->checkPlatform();
     return $this->plugin->taxFieldVal($entity, $field);

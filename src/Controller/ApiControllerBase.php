@@ -197,9 +197,16 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
     // Set values if we are asking for a specific resource.
     $parameters = $this->currentRoute->getParameters()->all();
 
+    // Set values if we are asking for a specific resource.
+    $parameters = $this->currentRoute->getParameters()->all();
+
     if (isset($parameters['nid'])) {
       $this->privateParams['nid'] = $parameters['nid']->id();
       $this->resource = $parameters['nid'];
+    }
+    elseif (isset($parameters['taxonomy_term'])) {
+      $this->privateParams['tid'] = $parameters['taxonomy_term']->id();
+      $this->resource = $parameters['taxonomy_term'];
     }
 
     // Add in debugging.

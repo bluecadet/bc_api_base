@@ -49,6 +49,19 @@ interface PlatformTransformInterface {
   public function boolFieldVal(EntityInterface $entity, string $field);
 
   /**
+   * Get ids of referenced entities, properlly transformed.
+   *
+   * @param \Drupal\Core\Config\Entity\EntityInterface $entity
+   *   The Entity.
+   * @param string $field
+   *   The Field.
+   *
+   * @return array|string|null
+   *   Array of field values
+   */
+  public function simpleEntityRefFieldVal(EntityInterface $entity, string $field);
+
+  /**
    * Get Value of a taxonomy ref field, properlly transformed.
    *
    * @param \Drupal\Core\Config\Entity\EntityInterface $entity
