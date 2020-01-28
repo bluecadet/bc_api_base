@@ -310,6 +310,7 @@ class PlatformBase extends PluginBase implements PlatformInterface, PlatformTran
       switch ($this->fieldStorageCache[$storage_config_id]->getType()) {
         case "list_integer":
         case "integer":
+        case "entity_reference":
           return NULL;
 
         case "string":
