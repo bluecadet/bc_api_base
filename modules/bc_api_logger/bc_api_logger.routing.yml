@@ -1,0 +1,7 @@
+bc_api_logger.logging_settings:
+  path: '/admin/config/development/api-logging'
+  defaults:
+    _form: '\Drupal\bc_api_logger\Form\ApiLoggerSettings'
+    _title: 'API Logging and errors'
+  requirements:
+    _permission: 'administer site configuration'

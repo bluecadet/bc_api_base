@@ -1,0 +1,6 @@
+bc_api_logger.logging_settings:
+  title: 'API Logging'
+  parent: system.admin_config_development
+  description: 'Configure the display of API error messages and database logging.'
+  route_name: bc_api_logger.logging_settings
+  weight: -13
