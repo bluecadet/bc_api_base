@@ -37,7 +37,7 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
    *
    * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
    */
-  protected $logger;
+  protected $loggerFactory;
 
   /**
    * Constructs a new R4032LoginSubscriber.
@@ -45,7 +45,7 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
   public function __construct(UrlGeneratorInterface $url_generator, State $drupal_state, LoggerChannelFactoryInterface $logger) {
     $this->urlGenerator = $url_generator;
     $this->drupalState = $drupal_state;
-    $this->logger = $logger->get("API");
+    $this->loggerFactory = $logger;
   }
 
   /**
@@ -104,6 +104,9 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
         ];
         $response = new JsonResponse($data);
         $event->setResponse($response);
+
+        // Log this call.
+        $this->loggerFactory->get('bc_api')->error("Bad Api call. ", ["request" => $request, "exception" => $exception]);
       }
     }
   }
@@ -127,6 +130,9 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
       ];
       $response = new JsonResponse($data);
       $event->setResponse($response);
+
+      // Log this call.
+      $this->loggerFactory->get('bc_api')->error("403: Bad Api call. " . $exception->getMessage(), ["request" => $request, "exception" => $exception]);
     }
   }
 
@@ -149,6 +155,9 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
       ];
       $response = new JsonResponse($data);
       $event->setResponse($response);
+
+      // Log this call.
+      $this->loggerFactory->get('bc_api')->error("403: Bad Api call. " . $exception->getMessage(), ["request" => $request, "exception" => $exception]);
     }
 
   }

@@ -6,7 +6,7 @@ use Drupal\bc_api_base\AssetApiService;
 use Drupal\bc_api_base\ValueTransformationService;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -140,14 +140,22 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
   protected $currentRoute = NULL;
 
   /**
+   * The logger factory.
+   *
+   * @var \Drupal\Core\Logger\LoggerChannelFactoryInterface
+   */
+  protected $loggerFactory;
+
+  /**
    * Class constructor.
    */
-  public function __construct(AssetApiService $assetService, ValueTransformationService $transformer, CacheBackendInterface $cache, CurrentRouteMatch $current_route) {
+  public function __construct(AssetApiService $assetService, ValueTransformationService $transformer, CacheBackendInterface $cache, CurrentRouteMatch $current_route, LoggerChannelFactoryInterface $factory) {
     $this->assetService = $assetService;
     $this->initCacheTags();
     $this->transformer = $transformer;
     $this->cache = $cache;
     $this->currentRoute = $current_route;
+    $this->loggerFactory = $factory;
   }
 
   /**
@@ -159,7 +167,8 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
       $container->get('bc_api_base.asset'),
       $container->get('bc_api_base.valueTransformer'),
       $container->get('cache.bc_api_base'),
-      $container->get('current_route_match')
+      $container->get('current_route_match'),
+      $container->get('logger.factory')
     );
   }
 
@@ -274,6 +283,9 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
       'next' => '',
     ];
 
+    // Log this call.
+    $this->loggerFactory->get('bc_api')->info("Endpoint Called", ["request" => $request]);
+
     if ($cache = $this->cache->get($cid)) {
       $this->return_data = $cache->data;
     }
@@ -291,7 +303,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
       $this->cache->set($cid, $this->data, (time() + $cache_time), $this->cacheTags);
     }
 
-    if ($this->privateParams['debug']) {
+    if ($this->privateParams['debug'] && function_exists("ksm")) {
       ksm($this->return_data);
       return [];
     }

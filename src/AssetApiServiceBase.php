@@ -19,7 +19,7 @@ class AssetApiServiceBase {
     $data = [
       'uri' => $file->getFileUri(),
       'url' => $file->url(),
-      'relative_path' => $this->getRelativePath($file->url()),
+      'relativePath' => $this->getRelativePath($file->url()),
     ];
 
     return $data;
