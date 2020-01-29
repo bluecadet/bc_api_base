@@ -887,7 +887,19 @@ display:
             default_group_multiple: {  }
             group_items: {  }
           plugin_id: in_operator
-      sorts: {  }
+      sorts:
+        id:
+          id: id
+          table: api_log
+          field: id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: DESC
+          exposed: false
+          expose:
+            label: ''
+          plugin_id: standard
       header: {  }
       footer: {  }
       empty: {  }
