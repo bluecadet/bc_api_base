@@ -6,4 +6,4 @@ package: Bluecadet
 version: '8.x-1.0.0'
 
 dependencies:
-  - bc_api_logger:bc_api_logger
+  - bc_api_base:bc_api_base
