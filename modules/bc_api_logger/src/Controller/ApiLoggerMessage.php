@@ -71,8 +71,14 @@ class ApiLoggerMessage extends ControllerBase {
       throw new HttpException(400, $err_message);
     }
 
+    // Check Channel.
+    $channel = $request->request->get('channel');
+    if (is_null($channel)) {
+      $channel = 'bc_api_external';
+    }
+
     // Level: 0-7.
-    $this->loggerFactory->get('bc_api_external')->log((int) $level, $log_message, ['request' => $request]);
+    $this->loggerFactory->get($channel)->log((int) $level, $log_message, ['request' => $request]);
 
     return new JsonResponse([
       'status' => 200,
