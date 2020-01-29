@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
- * API Controll Base.
+ * API Controller Base.
  *
  * This includes:
  * - platform flags
