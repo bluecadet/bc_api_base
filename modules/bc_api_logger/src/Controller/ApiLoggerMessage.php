@@ -12,6 +12,31 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * API Controller Messager.
+ *
+ * @ApiDoc(
+ *   params = {
+ *     @ApiParam(
+ *       name = "message",
+ *       type = "string",
+ *       description = "The message to log",
+ *       required = TRUE,
+ *     ),
+ *     @ApiParam(
+ *       name = "level",
+ *       type = "bool",
+ *       description = "Filter on on node status.",
+ *       default = "7",
+ *       required = TRUE,
+ *       range = {0, 7},
+ *     ),
+ *     @ApiParam(
+ *       name = "channel",
+ *       type = "bool",
+ *       description = "The channel to log this to, but should be set to anything bc_api_**",
+ *       default = "bc_api_external",
+ *     ),
+ *   }
+ * )
  */
 class ApiLoggerMessage extends ControllerBase {
 

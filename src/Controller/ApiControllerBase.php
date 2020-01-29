@@ -19,6 +19,34 @@ use Symfony\Component\HttpFoundation\JsonResponse;
  * - platform flags
  * - Connection to Image service
  * That is all.
+ *
+ * @ApiBaseDoc(
+ *   params = {
+ *     @ApiParam(
+ *       name = "platform",
+ *       type = "string",
+ *       description = "The platform flag.",
+ *     ),
+ *     @ApiParam(
+ *       name = "page",
+ *       type = "int",
+ *       description = "Which page. Start at 0",
+ *       default = "0",
+ *     ),
+ *     @ApiParam(
+ *       name = "limit",
+ *       type = "int",
+ *       description = "How many records on a page.",
+ *       default = "500",
+ *     ),
+ *     @ApiParam(
+ *       name = "debug",
+ *       type = "bool",
+ *       description = "This is a description.",
+ *       default = "FALSE",
+ *     ),
+ *   },
+ * )
  */
 class ApiControllerBase extends ControllerBase implements ApiControllerInterface {
 

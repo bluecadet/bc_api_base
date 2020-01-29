@@ -1,0 +1,63 @@
+<?php
+
+/**
+ * @file
+ * Api documentation module.
+ */
+
+use Drupal\bc_api_base\Annotation\ApiBaseDoc;
+use Drupal\bc_api_base\Annotation\ApiDoc;
+use Drupal\Component\Annotation\Doctrine\SimpleAnnotationReader;
+
+/**
+ * implements hook_theme().
+ */
+function bc_api_docs_theme() {
+  return [
+    'api_endpoint' => [
+      'variables' => ['endpoint_data' => NULL],
+    ],
+  ];
+}
+/**
+ * Implements template_preprocess_hook().
+ */
+function template_preprocess_api_endpoint(&$vars) {
+
+  $route = $vars['endpoint_data']['route'];
+  $annotations = $vars['endpoint_data']['annotations'];
+
+  $vars['data'] = [];
+  $vars['data']['path'] = $route->getPath();
+  $vars['data']['methods'] = implode(", ", $route->getMethods());
+  $vars['data']['param_table'] = [
+    '#type' => 'table',
+    '#header' => ['Name', 'Type', 'Description', 'Required', 'Default'],
+    '#rows' => [],
+    '#responsive' => TRUE,
+  ];
+
+  foreach ($annotations as $annotation) {
+    if (($annotation instanceof ApiDoc || $annotation instanceof ApiBaseDoc) && isset($annotation->params)) {
+      foreach ($annotation->params as $param) {
+
+        $full_description = $param->description;
+
+        $row = [
+          $param->name,
+          $param->type,
+          $full_description,
+          ($param->required)? $param->required : "FALSE",
+          $param->default,
+        ];
+
+        $vars['data']['param_table']['#rows'][$param->name] = $row;
+      }
+    }
+  }
+
+  if (empty($vars['data']['param_table']['#rows'])) {
+    unset($vars['data']['param_table']);
+  }
+
+}

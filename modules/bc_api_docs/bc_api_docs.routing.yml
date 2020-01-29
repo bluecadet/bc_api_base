@@ -1,0 +1,7 @@
+bc_api_docs.documentation:
+  path: '/admin/reports/api-docs'
+  defaults:
+    _controller: '\Drupal\bc_api_docs\Controller\ApiDocsController::build'
+    _title: 'Api Documentation'
+  requirements:
+    _permission: 'access administration pages'

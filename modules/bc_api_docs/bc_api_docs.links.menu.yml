@@ -1,0 +1,6 @@
+bc_api_docs.documentation:
+  title: 'API Documentation'
+  parent: system.admin_config_development
+  description: 'API Documentation.'
+  route_name: bc_api_docs.documentation
+  weight: 100
