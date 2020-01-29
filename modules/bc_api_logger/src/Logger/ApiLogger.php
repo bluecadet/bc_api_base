@@ -108,15 +108,19 @@ class ApiLogger implements LoggerInterface {
           ->execute();
       }
       catch (\Exception $e) {
-        // When running Drupal on MySQL or MariaDB you can run into several errors
+        // When running Drupal on MySQL or MariaDB you can run into several
+        // errors
         // that corrupt the database connection. Some examples for these kind of
         // errors on the database layer are "1100 - Table 'xyz' was not locked
         // with LOCK TABLES" and "1153 - Got a packet bigger than
-        // 'max_allowed_packet' bytes". If such an error happens, the MySQL server
+        // 'max_allowed_packet' bytes". If such an error happens, the MySQL
+        // server
         // invalidates the connection and answers all further requests in this
         // connection with "2006 - MySQL server had gone away". In that case the
-        // insert statement above results in a database exception. To ensure that
-        // the causal error is written to the log we try once to open a dedicated
+        // insert statement above results in a database exception. To ensure
+        // that
+        // the causal error is written to the log we try once to open a
+        // dedicated
         // connection and write again.
         if (
           // Only handle database related exceptions.

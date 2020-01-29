@@ -11,6 +11,7 @@ use Drupal\Core\State\State;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
@@ -66,6 +67,7 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
    * {@inheritdoc}
    */
   public function onException(GetResponseForExceptionEvent $event) {
+    // Grab the exception.
     $exception = $event->getException();
 
     // Make the exception available for example when rendering a block.
@@ -109,6 +111,48 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
         $this->loggerFactory->get('bc_api')->error("Bad Api call. ", ["request" => $request, "exception" => $exception]);
       }
     }
+
+    if ($exception instanceof MethodNotAllowedHttpException) {
+      $request = $event->getRequest();
+
+      if (strpos($request->getRequestUri(), "/api/") === 0 || $request->getRequestUri() == "/api") {
+        $data = [
+          'status' => 404,
+          'error_msg' => 'Not Found',
+          'full_msg' => $exception->getMessage(),
+        ];
+        $response = new JsonResponse($data);
+        $event->setResponse($response);
+
+        // Log this call.
+        $this->loggerFactory->get('bc_api')->error("Bad Api call. ", ["request" => $request, "exception" => $exception]);
+      }
+    }
+  }
+
+  /**
+   * Redirects on 400 Bad Request kernel exceptions.
+   *
+   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   *   The Event to process.
+   */
+  public function on400(GetResponseEvent $event) {
+
+    $request = $event->getRequest();
+    $exception = $event->getException();
+
+    if (strpos($request->getRequestUri(), "/api/") === 0 || $request->getRequestUri() == "/api") {
+      $data = [
+        'status' => (int) $exception->getStatusCode(),
+        'error_msg' => 'Bad Request',
+        'full_msg' => $exception->getMessage(),
+      ];
+      $response = new JsonResponse($data);
+      $event->setResponse($response);
+
+      // Log this call.
+      $this->loggerFactory->get('bc_api')->error("400: Bad Api call. " . $exception->getMessage(), ["request" => $request, "exception" => $exception]);
+    }
   }
 
   /**
@@ -127,6 +171,7 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
       $data = [
         'status' => (int) $exception->getStatusCode(),
         'error_msg' => 'Access Denied',
+        // 'full_msg' => $exception->getMessage(), DEBUG ONLY
       ];
       $response = new JsonResponse($data);
       $event->setResponse($response);

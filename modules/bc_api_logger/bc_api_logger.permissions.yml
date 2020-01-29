@@ -1,0 +1,3 @@
+'log external messages':
+  title: "Log external messages"
+  description: "Use the 'api/message' endpoint to log messages."

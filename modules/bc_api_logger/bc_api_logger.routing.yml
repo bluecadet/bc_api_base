@@ -5,3 +5,13 @@ bc_api_logger.logging_settings:
     _title: 'API Logging and errors'
   requirements:
     _permission: 'administer site configuration'
+
+bc_api_logger.message:
+  path: '/api/message'
+  methods: [POST]
+  defaults:
+    _controller: '\Drupal\bc_api_logger\Controller\ApiLoggerMessage:setMessage'
+  options:
+    _auth: [ 'key_auth' ]
+  requirements:
+    _permission: 'log external messages'
