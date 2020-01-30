@@ -60,7 +60,7 @@ class AssetApiServiceBase {
     $pass = ($user || $pass) ? "$pass@" : '';
 
     $path = ($parts['path'] ?? '');
-    $query = isset($parts['query']) ? ('?' . $parts['query']) : '';
+    $query = (isset($parts['query']) && !empty($parts['query'])) ? ('?' . $parts['query']) : '';
     $fragment = isset($parts['fragment']) ? ('#' . $parts['fragment']) : '';
 
     return implode('', [
