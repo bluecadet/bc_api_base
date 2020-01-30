@@ -307,16 +307,20 @@ class PlatformBase extends PluginBase implements PlatformInterface, PlatformTran
       return current($data);
     }
     elseif ($cardinality == 1 && count($data) === 0) {
-      switch ($this->fieldStorageCache[$storage_config_id]->getType()) {
-        case "list_integer":
-        case "integer":
-        case "entity_reference":
-          return NULL;
+      // phpcs:disable
+      // switch ($this->fieldStorageCache[$storage_config_id]->getType()) {
+      //   case "list_integer":
+      //   case "integer":
+      //   case "entity_reference":
+      //     return NULL;
 
-        case "string":
-        default:
-          return "";
-      }
+      //   case "string":
+      //   default:
+      //     return NULL;
+      // }
+      // phpcs:enable
+
+      return NULL;
     }
 
     return $data;
