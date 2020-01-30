@@ -1,0 +1,4 @@
+row_limit: 100000
+dependencies:
+  module:
+    - bc_api_logger

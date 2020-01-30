@@ -24,14 +24,14 @@ class ApiLoggerSettings extends ConfigFormBase {
    * {@inheritdoc}
    */
   protected function getEditableConfigNames() {
-    return ['api_logger.settings'];
+    return ['bc_api_logger.settings'];
   }
 
   /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $config = $this->config('api_logger.settings');
+    $config = $this->config('bc_api_logger.settings');
 
     $row_limits = [5, 100, 1000, 10000, 100000, 1000000];
     $form['row_limit'] = [
@@ -49,7 +49,7 @@ class ApiLoggerSettings extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->config('api_logger.settings')
+    $this->config('bc_api_logger.settings')
       ->set('row_limit', $form_state->getValue('row_limit'))
       ->save();
 

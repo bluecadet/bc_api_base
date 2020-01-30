@@ -12,7 +12,7 @@
  */
 function bc_api_logger_cron() {
   // Cleanup the watchdog table.
-  $row_limit = \Drupal::config('api_logger.settings')->get('row_limit');
+  $row_limit = \Drupal::config('bc_api_logger.settings')->get('row_limit');
 
   // For row limit n, get the wid of the nth row in descending wid order.
   // Counting the most recent n rows avoids issues with wid number sequences,
