@@ -79,6 +79,24 @@ class ImageApiService extends AssetApiServiceBase {
 
         $url = $style->buildUrl($file->getFileUri());
 
+        // Remove an h query param.
+        if ($this->configFactory->get('image.settings')->get('suppress_itok_output') && $this->configFactory->get('image.settings')->get('allow_insecure_derivatives')) {
+          $parsed_url = parse_url($url);
+          $qp_vals = explode("&", $parsed_url['query']);
+
+          $url_query_params = [];
+          foreach ($qp_vals as $values) {
+            $ex_vals = explode("=", $values);
+            $url_query_params[$ex_vals[0]] = $ex_vals[1];
+          }
+          if (isset($url_query_params['h'])) {
+            unset($url_query_params['h']);
+          }
+          $parsed_url['query'] = http_build_query($url_query_params);
+
+          $url = $this->buildUrl($parsed_url);
+        }
+
         $data[$style_name] = [
           'uri' => $style->buildUri($file->getFileUri()),
           'url' => $url,
