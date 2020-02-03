@@ -61,9 +61,30 @@ interface ApiControllerInterface {
   public function getResource(Request $request);
 
   /**
-   * Get Api Resource Data. Get the actual Data.
+   * Get Api Resource List.
+   *
+   * @param Symfony\Component\HttpFoundation\Request $request
+   *   Actual request.
+   *
+   * @return Symfony\Component\HttpFoundation\HttpResponse
+   *   An HTTP response.
    */
-  public function getResourceData();
+  public function getResourceList(Request $request);
+
+  /**
+   * Get Api Resource Query Data.
+   */
+  public function getResourceQueryResult();
+
+  /**
+   * Get Api Resource Query Data.
+   */
+  public function getResourceListQueryResult();
+
+  /**
+   * From an array of raw (Drupal) data, build out our endpoint data.
+   */
+  public function buildAllResourceData();
 
   /**
    * Build Links associated with this endpoint.

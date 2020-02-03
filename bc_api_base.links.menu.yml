@@ -1,0 +1,5 @@
+bc_api_base.cache.settings:
+  title: 'API Cache Settings'
+  parent: system.admin_config_services
+  description: 'API Cache Settings'
+  route_name: bc_api_base.cache.settings

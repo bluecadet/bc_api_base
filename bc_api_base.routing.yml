@@ -1,0 +1,6 @@
+bc_api_base.cache.settings:
+  path: '/admin/config/service/cache-settings'
+  defaults:
+    _form: '\Drupal\bc_api_base\Form\ApiCacheSettings'
+  requirements:
+    _permission: 'administer api'

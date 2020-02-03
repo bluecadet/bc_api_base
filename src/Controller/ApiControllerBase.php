@@ -6,6 +6,8 @@ use Drupal\bc_api_base\AssetApiService;
 use Drupal\bc_api_base\ValueTransformationService;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -84,6 +86,13 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
    * @var string
    */
   protected $platform = '';
+
+  /**
+   * Raw (Drupal) Data.
+   *
+   * @var array
+   */
+  protected $rawData = [];
 
   /**
    * Processed Data.
@@ -175,15 +184,48 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
   protected $loggerFactory;
 
   /**
+   * Entity Query.
+   *
+   * @var Drupal\Core\Entity\Query\QueryFactory
+   */
+  protected $entityQuery;
+
+  /**
+   * Entity Type Manager.
+   *
+   * @var Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
+   * Drupal State obj.
+   *
+   * @var Drupal\Core\State\State
+   */
+  private $drupalstate = [];
+
+  /**
    * Class constructor.
    */
-  public function __construct(AssetApiService $assetService, ValueTransformationService $transformer, CacheBackendInterface $cache, CurrentRouteMatch $current_route, LoggerChannelFactoryInterface $factory) {
+  public function __construct(
+    AssetApiService $assetService,
+    ValueTransformationService $transformer,
+    CacheBackendInterface $cache,
+    CurrentRouteMatch $current_route,
+    LoggerChannelFactoryInterface $factory,
+    QueryFactory $entityQuery,
+    EntityTypeManagerInterface $entityTypeManager,
+    $drupal_state) {
+
     $this->assetService = $assetService;
     $this->initCacheTags();
     $this->transformer = $transformer;
     $this->cache = $cache;
     $this->currentRoute = $current_route;
     $this->loggerFactory = $factory;
+    $this->entityQuery = $entityQuery;
+    $this->entityTypeManager = $entityTypeManager;
+    $this->drupalState = $drupal_state;
   }
 
   /**
@@ -196,7 +238,10 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
       $container->get('bc_api_base.valueTransformer'),
       $container->get('cache.bc_api_base'),
       $container->get('current_route_match'),
-      $container->get('logger.factory')
+      $container->get('logger.factory'),
+      $container->get('entity.query'),
+      $container->get('entity_type.manager'),
+      $container->get('state')
     );
   }
 
@@ -274,16 +319,71 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
   /**
    * {@inheritdoc}
    */
-  public function getApiCacheTime($id) {
+  public function getApiCacheTime($id = 'list') {
+    $settings = $this->drupalState->get('bc_api_base.cache.settings', []);
 
+    if (isset($settings['classes']["\\" . get_class($this)]['routes'][$id])) {
+      return ($settings['classes']["\\" . get_class($this)]['routes'][$id]);
+    }
     return 0;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getResource(Request $request) {
+  final public function getResource(Request $request) {
     $this->request = $request;
+
+    // Check if there’s a platform parameter.
+    $this->setPlatform($request);
+
+    $this->setParams($request);
+
+    $cid = $this->getCacheId();
+
+    $cache_time = $this->getApiCacheTime('detail');
+
+    $this->return_data = [
+      'status' => 200,
+      'data' => [],
+      'resultTotal' => 0,
+    ];
+
+    // Log this call.
+    $this->loggerFactory->get('bc_api')->info("Endpoint Called", ["request" => $request]);
+
+    if ($cache = $this->cache->get($cid)) {
+      $this->return_data = $cache->data;
+      $this->return_data['cacheHit'] = TRUE;
+    }
+    else {
+
+      $this->getResourceQueryResult();
+      $this->buildAllResourceData();
+      $this->buildLinks();
+
+      $this->return_data['data'] = $this->data;
+      $this->return_data['resultTotal'] = $this->resultTotal;
+
+      $this->cache->set($cid, $this->return_data, (time() + $cache_time), $this->cacheTags);
+
+      $this->return_data['cacheHit'] = FALSE;
+    }
+
+    if ($this->privateParams['debug'] && function_exists("ksm")) {
+      ksm($this->return_data);
+      return [];
+    }
+
+    return new JsonResponse($this->return_data);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  final public function getResourceList(Request $request) {
+    $this->request = $request;
+
     // Set Page.
     $this->page = ($request->query->get('page')) ? $request->query->get('page') : $this->page;
 
@@ -297,7 +397,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
 
     $cid = $this->getCacheId();
 
-    $cache_time = $this->getApiCacheTime();
+    $cache_time = $this->getApiCacheTime('list');
 
     $this->return_data = [
       'status' => 200,
@@ -313,10 +413,12 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
 
     if ($cache = $this->cache->get($cid)) {
       $this->return_data = $cache->data;
+      $this->return_data['cacheHit'] = TRUE;
     }
     else {
 
-      $this->getResourceData();
+      $this->getResourceListQueryResult();
+      $this->buildAllResourceData();
       $this->buildLinks();
 
       $this->return_data['data'] = $this->data;
@@ -325,7 +427,8 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
       $this->return_data['prev'] = $this->prev;
       $this->return_data['next'] = $this->next;
 
-      $this->cache->set($cid, $this->data, (time() + $cache_time), $this->cacheTags);
+      $this->cache->set($cid, $this->return_data, (time() + $cache_time), $this->cacheTags);
+      $this->return_data['cacheHit'] = FALSE;
     }
 
     if ($this->privateParams['debug'] && function_exists("ksm")) {
@@ -339,12 +442,42 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
   /**
    * {@inheritdoc}
    */
-  public function getResourceData() {
-    $this->data = [];
+  public function getResourceQueryResult() {
+    $this->rawData = [];
     $this->resultTotal = 0;
-    $this->pageCount = 0;
-    $this->prev = NULL;
-    $this->next = NULL;
+
+    if (isset($this->resource) && !empty($this->resource)) {
+      $this->rawData = [$this->resource];
+      $this->resultTotal = 1;
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getResourceListQueryResult() {
+    $query = $this->entityQuery->get('node');
+
+    $count_query = clone $query;
+
+    $query->range(($this->page * $this->limit), $this->limit);
+    $entity_ids = $query->execute();
+
+    // Must set total result count so we can properly page.
+    $this->resultTotal = (int) $count_query->count()->execute();
+
+    // Process Items.
+    $node_storage = $this->entityTypeManager->getStorage('node');
+    $this->rawData = $node_storage->loadMultiple($entity_ids);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildAllResourceData() {
+    foreach ($this->rawData as $node) {
+      $this->data[] = $node->toArray();
+    }
   }
 
   /**

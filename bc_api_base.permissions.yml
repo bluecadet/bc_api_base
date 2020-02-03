@@ -1,3 +1,7 @@
 'use api':
   title: "Use the API"
   description: "Use the API."
+
+'administer api':
+  title: "Administer the API"
+  description: "Administer the API."
