@@ -1,0 +1,7 @@
+langcode: en
+status: true
+dependencies: {  }
+name: Nationalities
+vid: nationalities
+description: ''
+weight: 0

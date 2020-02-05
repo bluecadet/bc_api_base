@@ -7,7 +7,6 @@ use Drupal\bc_api_base\ValueTransformationService;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -184,13 +183,6 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
   protected $loggerFactory;
 
   /**
-   * Entity Query.
-   *
-   * @var Drupal\Core\Entity\Query\QueryFactory
-   */
-  protected $entityQuery;
-
-  /**
    * Entity Type Manager.
    *
    * @var Drupal\Core\Entity\EntityTypeManagerInterface
@@ -213,7 +205,6 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
     CacheBackendInterface $cache,
     CurrentRouteMatch $current_route,
     LoggerChannelFactoryInterface $factory,
-    QueryFactory $entityQuery,
     EntityTypeManagerInterface $entityTypeManager,
     $drupal_state) {
 
@@ -223,7 +214,6 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
     $this->cache = $cache;
     $this->currentRoute = $current_route;
     $this->loggerFactory = $factory;
-    $this->entityQuery = $entityQuery;
     $this->entityTypeManager = $entityTypeManager;
     $this->drupalState = $drupal_state;
   }
@@ -239,7 +229,6 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
       $container->get('cache.bc_api_base'),
       $container->get('current_route_match'),
       $container->get('logger.factory'),
-      $container->get('entity.query'),
       $container->get('entity_type.manager'),
       $container->get('state')
     );
@@ -456,7 +445,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
    * {@inheritdoc}
    */
   public function getResourceListQueryResult() {
-    $query = $this->entityQuery->get('node');
+    $query = $this->entityTypeManager->getStorage('node')->getQuery();
 
     $count_query = clone $query;
 

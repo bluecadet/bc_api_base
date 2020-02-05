@@ -2,13 +2,29 @@
 
 namespace Drupal\bc_api_example\Controller;
 
-use Drupal\node\Entity\Node;
 use Drupal\bc_api_base\Controller\ApiControllerBase;
 
 /**
  * Example API Controller Class.
+ *
+ * @ApiDoc(
+ *   params = {
+ *     @ApiParam(
+ *       name = "status",
+ *       type = "bool",
+ *       description = "Filter on node status.",
+ *       default = "TRUE",
+ *     ),
+ *     @ApiParam(
+ *       name = "nat",
+ *       type = "int",
+ *       description = "Filter on nationality. This should use the taxonomy id of the nationality.",
+ *       default = "NULL",
+ *     ),
+ *   }
+ * )
  */
-class ApiControllerExample extends ApiControllerBase {
+class ApiControllerPirateExample extends ApiControllerBase {
 
   /**
    * {@inheritdoc}
@@ -46,6 +62,9 @@ class ApiControllerExample extends ApiControllerBase {
    * {@inheritdoc}
    */
   public function setParams() {
+    // It would be good to always run this.
+    parent::setParams();
+
     $this->privateParams['status'] = 1;
 
     // Here we also want to handle any bad param errors...
@@ -61,10 +80,19 @@ class ApiControllerExample extends ApiControllerBase {
   /**
    * {@inheritdoc}
    */
-  public function getResourceData() {
+  public function getResourceQueryResult() {
+    // Just having this here as an example.
+    // Most times no need to override this method.
+    parent::getResourceQueryResult();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getResourceListQueryResult() {
     // This method should be overridden for any endpoint.
     $data = [];
-    $query = \Drupal::entityQuery('node');
+    $query = $this->entityTypeManager->getStorage('node')->getQuery();
     $query->condition('status', $this->privateParams['status']);
 
     $count_query = clone $query;
@@ -76,15 +104,22 @@ class ApiControllerExample extends ApiControllerBase {
     $this->resultTotal = $count_query->count()->execute();
 
     // Process Items.
-    $nodes = Node::loadMultiple($entity_ids);
+    $nodes = $this->entityTypeManager->getStorage('node')->loadMultiple($entity_ids);
 
-    foreach ($nodes as $node) {
+    $this->rawData = $nodes;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function buildAllResourceData() {
+    $data = [];
+
+    foreach ($this->rawData as $node) {
       $this->cacheTags = array_merge($this->cacheTags, $node->getCacheTags());
       $item = [
         'nid' => (int) $node->id(),
-        // 'field_sync_id' => $this->transformer->textFieldVal($node, 'field_sync_id'),
       ];
-
       $data[] = $item;
     }
 
