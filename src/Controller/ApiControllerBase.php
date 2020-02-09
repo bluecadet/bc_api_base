@@ -2,8 +2,13 @@
 
 namespace Drupal\bc_api_base\Controller;
 
+use Drupal\bc_api_base\Annotation\ApiBaseDoc;
+use Drupal\bc_api_base\Annotation\ApiDoc;
+use Drupal\bc_api_base\Annotation\ApiParam;
+use Drupal\bc_api_base\ApiParameterValidation;
 use Drupal\bc_api_base\AssetApiService;
 use Drupal\bc_api_base\ValueTransformationService;
+use Drupal\Component\Annotation\Doctrine\SimpleAnnotationReader;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -12,6 +17,7 @@ use Drupal\Core\Routing\CurrentRouteMatch;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
  * API Controller Base.
@@ -197,11 +203,19 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
   private $drupalstate = [];
 
   /**
+   * Drupal State obj.
+   *
+   * @var Drupal\bc_api_base\ApiParameterValidation
+   */
+  private $queryValidation;
+
+  /**
    * Class constructor.
    */
   public function __construct(
     AssetApiService $assetService,
     ValueTransformationService $transformer,
+    ApiParameterValidation $query_validation,
     CacheBackendInterface $cache,
     CurrentRouteMatch $current_route,
     LoggerChannelFactoryInterface $factory,
@@ -211,6 +225,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
     $this->assetService = $assetService;
     $this->initCacheTags();
     $this->transformer = $transformer;
+    $this->queryValidation = $query_validation;
     $this->cache = $cache;
     $this->currentRoute = $current_route;
     $this->loggerFactory = $factory;
@@ -226,6 +241,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
     return new static(
       $container->get('bc_api_base.asset'),
       $container->get('bc_api_base.valueTransformer'),
+      $container->get('bc_api_base.param_validation'),
       $container->get('cache.bc_api_base'),
       $container->get('current_route_match'),
       $container->get('logger.factory'),
@@ -250,7 +266,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
    * {@inheritdoc}
    */
   public function setPlatform() {
-    // Check if there’s a platform parameter.
+    // Check if there's a platform parameter.
     $platform = $this->request->query->get('platform');
     if ($platform == NULL) {
       $platform = $this->getDefaultPlatform();
@@ -279,6 +295,42 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
 
     // Add in debugging.
     $this->privateParams['debug'] = filter_var($this->request->get('debug'), FILTER_VALIDATE_BOOLEAN);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function autoParams() {
+
+    // @TODO: Why aren't these autoloaded???
+    new ApiDoc([]);
+    new ApiBaseDoc([]);
+    new ApiParam([]);
+
+    $reader = new SimpleAnnotationReader();
+    $reader->addNamespace('Drupal\bc_api_base\Annotation');
+
+    // Called class params.
+    $class = get_class($this);
+    $reflectionClass = new \ReflectionClass($class);
+    $annotations = $reader->getClassAnnotations($reflectionClass);
+
+    $errors = $this->queryValidation->validateQueryParams($annotations, $this->request->query);
+
+    if (!empty($errors)) {
+
+      $response_msg = array_reduce($errors, function ($msg, $errors) {
+        if (!empty($msg)) {
+          $msg .= " ";
+        }
+        $msg .= $errors['error_msg'];
+        return $msg;
+      });
+
+      $bad_response = new BadRequestHttpException($response_msg);
+
+      throw $bad_response;
+    }
   }
 
   /**
@@ -323,10 +375,11 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
   final public function getResource(Request $request) {
     $this->request = $request;
 
-    // Check if there’s a platform parameter.
+    // Check if there's a platform parameter.
     $this->setPlatform($request);
 
-    $this->setParams($request);
+    $this->autoParams();
+    $this->setParams();
 
     $cid = $this->getCacheId();
 
@@ -379,10 +432,11 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
     // Set Limit.
     $this->limit = ($request->query->get('limit')) ? $request->query->get('limit') : $this->limit;
 
-    // Check if there’s a platform parameter.
+    // Check if there's a platform parameter.
     $this->setPlatform($request);
 
-    $this->setParams($request);
+    $this->autoParams();
+    $this->setParams();
 
     $cid = $this->getCacheId();
 

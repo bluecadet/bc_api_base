@@ -38,7 +38,7 @@ class ApiParam {
   /**
    * Default.
    *
-   * @var string
+   * @var mixed
    */
   public $default;
 
@@ -47,13 +47,25 @@ class ApiParam {
    *
    * @var bool
    */
-  public $required;
+  public $required = FALSE;
 
   /**
    * Range.
    *
-   * @var array<int>
    */
-  public $range;
+  public $rangeMin = NULL;
+
+  /**
+   * Range.
+   *
+   */
+  public $rangeMax = NULL;
+
+  /**
+   * Values.
+   *
+   * @var array<string>
+   */
+  public $values;
 
 }

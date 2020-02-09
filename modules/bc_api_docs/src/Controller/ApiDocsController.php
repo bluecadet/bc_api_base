@@ -54,9 +54,6 @@ class ApiDocsController extends ControllerBase {
     $query->condition("r.path", "/api%%", "LIKE");
     $results = $query->execute()->fetchAll();
 
-    $reader = new SimpleAnnotationReader();
-    $reader->addNamespace('Drupal\bc_api_base\Annotation');
-
     $endpoints = [];
 
     // Get Base class Annotations.

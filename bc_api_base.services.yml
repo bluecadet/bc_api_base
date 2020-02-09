@@ -36,3 +36,6 @@ services:
   bc_api_base.valueTransformer:
     class: Drupal\bc_api_base\ValueTransformationService
     arguments: ['@plugin.manager.platform']
+
+  bc_api_base.param_validation:
+    class: Drupal\bc_api_base\ApiParameterValidation

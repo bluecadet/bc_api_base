@@ -23,10 +23,12 @@ interface ApiControllerInterface {
   public function setPlatform();
 
   /**
+   * Will validate and set query paramaters based on annotations.
+   */
+  public function autoParams();
+
+  /**
    * Set query params based on request.
-   *
-   * @return string
-   *   The cache string id.
    */
   public function setParams();
 
