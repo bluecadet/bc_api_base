@@ -3,7 +3,7 @@ type: module
 description: Add logging functionality for API base.
 core: 8.x
 package: Bluecadet
-version: '8.x-1.1.0'
+version: '8.x-1.1.1'
 
 dependencies:
   - bc_api_base:bc_api_base
