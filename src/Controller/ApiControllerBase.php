@@ -315,7 +315,8 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
     $reflectionClass = new \ReflectionClass($class);
     $annotations = $reader->getClassAnnotations($reflectionClass);
 
-    $errors = $this->queryValidation->validateQueryParams($annotations, $this->request->query);
+    list($params, $errors) = $this->queryValidation->validateQueryParams($annotations, $this->request->query);
+    $this->params = array_merge($this->params, $params);
 
     if (!empty($errors)) {
 

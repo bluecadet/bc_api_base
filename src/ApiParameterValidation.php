@@ -12,6 +12,7 @@ class ApiParameterValidation {
    */
   public function validateQueryParams(array $annotations, $query_bag) {
     $errors = [];
+    $params = [];
 
     foreach ($annotations as $annotation) {
       if (isset($annotation->params)) {
@@ -36,13 +37,13 @@ class ApiParameterValidation {
           switch ($param->type) {
             case "string":
 
-              $this->params[$param->name] = $raw_value;
+              $params[$param->name] = $raw_value;
               break;
 
             case "bool":
             case "boolean":
               // Validate it is a bool.
-              if ($query_bag->has($param->name)) {
+              if ($query_bag->has($param->name) || $param->default) {
                 $test_value = filter_var($raw_value, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
 
                 if (is_null($test_value)) {
@@ -52,13 +53,13 @@ class ApiParameterValidation {
                   ];
                 }
 
-                $this->params[$param->name] = filter_var($raw_value, FILTER_VALIDATE_BOOLEAN);
+                $params[$param->name] = filter_var($raw_value, FILTER_VALIDATE_BOOLEAN);
               }
               break;
 
             case "int":
               // Validate it is a int.
-              if ($query_bag->has($param->name)) {
+              if ($query_bag->has($param->name) || $param->default) {
                 $test_value = filter_var($raw_value, FILTER_VALIDATE_INT);
 
                 if ($test_value === FALSE) {
@@ -78,13 +79,13 @@ class ApiParameterValidation {
                   ];
                 }
 
-                $this->params[$param->name] = $test_value;
+                $params[$param->name] = $test_value;
               }
               break;
 
             case "float":
               // Validate it is a float.
-              if ($query_bag->has($param->name)) {
+              if ($query_bag->has($param->name) || $param->default) {
                 $test_value = filter_var($raw_value, FILTER_VALIDATE_FLOAT);
 
                 if ($test_value === FALSE) {
@@ -104,13 +105,13 @@ class ApiParameterValidation {
                   ];
                 }
 
-                $this->params[$param->name] = $test_value;
+                $params[$param->name] = $test_value;
               }
               break;
 
             case "enum":
               // Validate options.
-              if ($query_bag->has($param->name)) {
+              if ($query_bag->has($param->name) || $param->default) {
                 if (!in_array($raw_value, $param->values)) {
 
                   $errors[] = [
@@ -118,6 +119,8 @@ class ApiParameterValidation {
                     'error_msg' => "Parameter '" . $param->name . "' must be in list. [" . implode(", ", $param->values) . "].",
                   ];
                 }
+
+                $params[$param->name] = $raw_value;
               }
 
               break;
@@ -126,7 +129,7 @@ class ApiParameterValidation {
       }
     }
 
-    return $errors;
+    return [$params, $errors];
   }
 
 }
