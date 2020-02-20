@@ -1,6 +1,9 @@
 langcode: en
 status: true
-dependencies: {  }
+dependencies:
+  enforced:
+    module:
+      - bc_api_example
 name: Nationalities
 vid: nationalities
 description: ''

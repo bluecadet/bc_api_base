@@ -1,0 +1,178 @@
+<?php
+
+/**
+ * @file
+ * Un/Install methods and funcs for BC Api Base.
+ */
+
+use Drupal\node\Entity\Node;
+use Drupal\taxonomy\Entity\Term;
+
+/**
+ * Implements hook_install().
+ */
+function bc_api_example_install() {
+  // Nationalities.
+  $nationalities = [
+    'malta' => [
+      'label' => 'Malta',
+      'tid' => null,
+    ],
+    'england' => [
+      'label' => 'England',
+      'tid' => null,
+    ],
+    'wales' => [
+      'label' => 'Wales',
+      'tid' => null,
+    ],
+    'barbados' => [
+      'label' => 'Barbados',
+      'tid' => null,
+    ],
+    'scotland' => [
+      'label' => 'Scotland',
+      'tid' => null,
+    ],
+  ];
+
+  foreach ($nationalities as $label => &$nation) {
+    $term = Term::create([
+      'name' => $nation['label'],
+      'vid' => 'nationalities',
+      'uid' => 1,
+    ]);
+
+    $term->save();
+    $nation['tid'] = $term->id();
+  }
+
+  // Ships.
+  $ships = [
+    'royal_fortune' => [
+      'title' => 'Royal Fortune',
+      'nid' => null,
+    ],
+    'whydah' => [
+      'title' => 'Whydah',
+      'nid' => null,
+    ],
+    'queen_anne' => [
+      'title' => 'Queen Anne\'s Revenge',
+      'nid' => null,
+    ],
+    'revenge' => [
+      'title' => 'Revenge',
+      'nid' => null,
+    ],
+    'adventure_galley' => [
+      'title' => 'Adventure Galley',
+      'nid' => null,
+    ],
+  ];
+
+  foreach ($ships as $ship_id => &$ship) {
+    $node = Node::create([
+      'type' => 'ship',
+      'status' => 1,
+      'uid' => 1,
+      'title' => $ship['title'],
+    ]);
+
+    $node->save();
+    $ship['nid'] = $node->id();
+  }
+
+  // Pirates.
+  $pirates = [
+    'black_beard' => [
+      'nid' => null,
+      'status' => 1,
+      'title' => 'Edward Teach',
+      'body' => "",
+      'nickname' => "Blackbeard",
+      'nationality' => ['england'],
+      'ships' => ['queen_anne'],
+    ],
+    'bartholomew_roberts' => [
+      'nid' => null,
+      'status' => 1,
+      'title' => 'Bartholomew Roberts',
+      'body' => "",
+      'nickname' => "Black Bart",
+      'nationality' => ['wales'],
+      'ships' => ['royal_fortune'],
+    ],
+    'sam_bellamy' => [
+      'nid' => null,
+      'status' => 1,
+      'title' => 'Sam Bellamy',
+      'body' => "",
+      'nickname' => "Black Sam",
+      'nationality' => ['england'],
+      'ships' => ['whuydah'],
+    ],
+    'stede_bonnet' => [
+      'nid' => null,
+      'status' => 1,
+      'title' => 'Stede Bonnet',
+      'nickname' => "The Gentleman Pirate",
+      'body' => "Nicknamed \"The Gentleman Pirate\", Bonnet was born into a wealthy family before turning to piracy.",
+      'nationality' => ['barbados'],
+      'ships' => ['revenge'],
+    ],
+    'william_kidd' => [
+      'nid' => null,
+      'status' => 1,
+      'title' => 'William Kidd',
+      'nickname' => "Captain",
+      'body' => "Although modern historians dispute the legitimacy of his trial and execution, the rumor of Captain Kidd's buried treasure has served only to build a legend around the man as a great pirate. His property was claimed by the crown and given to the Royal Hospital, Greenwich, by Queen Anne.",
+      'nationality' => ['scotland'],
+      'ships' => ['revenge'],
+    ],
+  ];
+
+  foreach ($pirates as $pirate_id => &$pirate) {
+    $n_values = [];
+    $s_values = [];
+
+    foreach ($pirate['nationality'] as $pn) {
+      $n_values[] = $nationalities[$pn]['tid'];
+    }
+
+    foreach ($pirate['ships'] as $sn) {
+      $s_values[] = $ships[$sn]['nid'];
+    }
+
+    $node = Node::create([
+      'type' => 'pirate',
+      'status' => $pirate['status'],
+      'uid' => 1,
+      'title' => $pirate['title'],
+      'body' => $pirate['body'],
+      'field_nickname' => $pirate['nickname'],
+      'field_nationalities' => $n_values,
+      'field_ships' => $s_values,
+    ]);
+
+    $node->save();
+  }
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function bc_api_example_uninstall() {
+  // Delete all nationality Terms.
+  $result = \Drupal::entityQuery('taxonomy_term')
+      ->condition('vid', 'nationalities')
+      ->execute();
+  entity_delete_multiple('taxonomy_term', $result);
+
+  // Delete all Ship Nodes.
+  // Delete all Pirate Nodes.
+  $result = \Drupal::entityQuery('node')
+      ->condition('type', ['ship', 'pirate'], 'IN')
+      ->execute();
+  entity_delete_multiple('node', $result);
+}

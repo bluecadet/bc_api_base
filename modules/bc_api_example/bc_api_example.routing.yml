@@ -2,7 +2,7 @@ bc_api_example.pirates:
   path: '/api/pirates'
   methods: [GET, HEAD]
   defaults:
-    _controller: '\Drupal\bc_api_example\Controller\ApiControllerPirateExample:getResource'
+    _controller: '\Drupal\bc_api_example\Controller\ApiControllerPirateExample:getResourceList'
   requirements:
     _permission: 'use api'
   options:
@@ -12,7 +12,7 @@ bc_api_example.pirates_detail:
   path: '/api/pirates/{nid}'
   methods: [GET, HEAD]
   defaults:
-    _controller: '\Drupal\bc_api_example\Controller\ApiControllerPirateExample:getResourceList'
+    _controller: '\Drupal\bc_api_example\Controller\ApiControllerPirateExample:getResource'
   requirements:
     _permission: 'use api'
   options:

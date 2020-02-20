@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  * Unit tests for the MyStatus utility class.
  *
  * @group bc_api
- * $group bc_api_base
+ * @group bc_api_base
  */
 class QueryValidationTests extends UnitTestCase {
 

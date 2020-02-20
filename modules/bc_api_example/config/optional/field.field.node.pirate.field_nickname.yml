@@ -1,0 +1,18 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_nickname
+    - node.type.pirate
+id: node.pirate.field_nickname
+field_name: field_nickname
+entity_type: node
+bundle: pirate
+label: Nickname
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

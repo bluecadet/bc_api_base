@@ -19,7 +19,6 @@ use Drupal\bc_api_base\Controller\ApiControllerBase;
  *       name = "nat",
  *       type = "int",
  *       description = "Filter on nationality. This should use the taxonomy id of the nationality.",
- *       default = "NULL",
  *     ),
  *   }
  * )
@@ -30,6 +29,8 @@ class ApiControllerPirateExample extends ApiControllerBase {
    * {@inheritdoc}
    */
   public function getApiCacheTime($id = NULL) {
+    // Parent method looks at settings form and takes into account list or
+    // detail.
     return 0;
   }
 
@@ -91,9 +92,9 @@ class ApiControllerPirateExample extends ApiControllerBase {
    */
   public function getResourceListQueryResult() {
     // This method should be overridden for any endpoint.
-    $data = [];
     $query = $this->entityTypeManager->getStorage('node')->getQuery();
     $query->condition('status', $this->privateParams['status']);
+    $query->condition('type', 'pirate');
 
     $count_query = clone $query;
 
@@ -101,7 +102,7 @@ class ApiControllerPirateExample extends ApiControllerBase {
     $entity_ids = $query->execute();
 
     // Must set total result count so we can properly page.
-    $this->resultTotal = $count_query->count()->execute();
+    $this->resultTotal = (int) $count_query->count()->execute();
 
     // Process Items.
     $nodes = $this->entityTypeManager->getStorage('node')->loadMultiple($entity_ids);
@@ -117,8 +118,13 @@ class ApiControllerPirateExample extends ApiControllerBase {
 
     foreach ($this->rawData as $node) {
       $this->cacheTags = array_merge($this->cacheTags, $node->getCacheTags());
+      $created_changed = $this->transformer->createdChangedFieldVals($node);
+
       $item = [
         'nid' => (int) $node->id(),
+        'cms_title' => $node->label(),
+        'created' => $created_changed[0],
+        'updated' => $created_changed[1],
       ];
       $data[] = $item;
     }

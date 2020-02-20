@@ -5,6 +5,7 @@ dependencies:
     - core.entity_view_mode.node.teaser
     - field.field.node.pirate.body
     - field.field.node.pirate.field_nationalities
+    - field.field.node.pirate.field_nickname
     - field.field.node.pirate.field_ships
     - node.type.pirate
   module:
@@ -30,4 +31,5 @@ content:
     region: content
 hidden:
   field_nationalities: true
+  field_nickname: true
   field_ships: true
