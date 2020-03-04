@@ -12,29 +12,11 @@ use Drupal\taxonomy\Entity\Term;
  * Implements hook_install().
  */
 function bc_api_example_install() {
+
+  module_load_include('inc', 'bc_api_example', 'bc_api_example.data');
+
   // Nationalities.
-  $nationalities = [
-    'malta' => [
-      'label' => 'Malta',
-      'tid' => null,
-    ],
-    'england' => [
-      'label' => 'England',
-      'tid' => null,
-    ],
-    'wales' => [
-      'label' => 'Wales',
-      'tid' => null,
-    ],
-    'barbados' => [
-      'label' => 'Barbados',
-      'tid' => null,
-    ],
-    'scotland' => [
-      'label' => 'Scotland',
-      'tid' => null,
-    ],
-  ];
+  $nationalities = bc_api_example_get_nationalities_data();
 
   foreach ($nationalities as $label => &$nation) {
     $term = Term::create([
@@ -48,28 +30,7 @@ function bc_api_example_install() {
   }
 
   // Ships.
-  $ships = [
-    'royal_fortune' => [
-      'title' => 'Royal Fortune',
-      'nid' => null,
-    ],
-    'whydah' => [
-      'title' => 'Whydah',
-      'nid' => null,
-    ],
-    'queen_anne' => [
-      'title' => 'Queen Anne\'s Revenge',
-      'nid' => null,
-    ],
-    'revenge' => [
-      'title' => 'Revenge',
-      'nid' => null,
-    ],
-    'adventure_galley' => [
-      'title' => 'Adventure Galley',
-      'nid' => null,
-    ],
-  ];
+  $ships = bc_api_example_get_ships_data();
 
   foreach ($ships as $ship_id => &$ship) {
     $node = Node::create([
@@ -84,53 +45,7 @@ function bc_api_example_install() {
   }
 
   // Pirates.
-  $pirates = [
-    'black_beard' => [
-      'nid' => null,
-      'status' => 1,
-      'title' => 'Edward Teach',
-      'body' => "",
-      'nickname' => "Blackbeard",
-      'nationality' => ['england'],
-      'ships' => ['queen_anne'],
-    ],
-    'bartholomew_roberts' => [
-      'nid' => null,
-      'status' => 1,
-      'title' => 'Bartholomew Roberts',
-      'body' => "",
-      'nickname' => "Black Bart",
-      'nationality' => ['wales'],
-      'ships' => ['royal_fortune'],
-    ],
-    'sam_bellamy' => [
-      'nid' => null,
-      'status' => 1,
-      'title' => 'Sam Bellamy',
-      'body' => "",
-      'nickname' => "Black Sam",
-      'nationality' => ['england'],
-      'ships' => ['whuydah'],
-    ],
-    'stede_bonnet' => [
-      'nid' => null,
-      'status' => 1,
-      'title' => 'Stede Bonnet',
-      'nickname' => "The Gentleman Pirate",
-      'body' => "Nicknamed \"The Gentleman Pirate\", Bonnet was born into a wealthy family before turning to piracy.",
-      'nationality' => ['barbados'],
-      'ships' => ['revenge'],
-    ],
-    'william_kidd' => [
-      'nid' => null,
-      'status' => 1,
-      'title' => 'William Kidd',
-      'nickname' => "Captain",
-      'body' => "Although modern historians dispute the legitimacy of his trial and execution, the rumor of Captain Kidd's buried treasure has served only to build a legend around the man as a great pirate. His property was claimed by the crown and given to the Royal Hospital, Greenwich, by Queen Anne.",
-      'nationality' => ['scotland'],
-      'ships' => ['revenge'],
-    ],
-  ];
+  $pirates = bc_api_example_get_pirates_data();
 
   foreach ($pirates as $pirate_id => &$pirate) {
     $n_values = [];

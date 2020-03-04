@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  *
  * @group bc_api
  * @group bc_api_base
+ * @group bc_api_base:unit
  */
 class QueryValidationTests extends UnitTestCase {
 
