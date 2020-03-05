@@ -1,6 +1,32 @@
-<div>
-  {{ data.methods }}
-  {{ data.path }}
+<div class="endpoint-data o-container-fluid u-mar-vert-m">
+  <div class="o-row">
+    <div class="o-col-12 title--xxxs">
+      <code>{{ data.methods }}</code>&nbsp;<code>{{ data.path }}</code>
+    </div>
+  </div>
 
-  {{ data.param_table }}
+  {% if data.full_description %}
+  <div class="o-row u-mar-vert-xxs">
+    <div class="o-col-12">
+      {{ data.full_description }}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if data.access %}
+  <div class="o-row u-mar-vert-xxs">
+    <div class="o-col-12">
+      <p class="u-text-bold">Access Restrictions</p>
+      {% if data.access.roles %}<p class="">{{ data.access.roles }}</p>{% endif %}
+      {% if data.access.permissions %}<p class="">{{ data.access.permissions }}</p>{% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="o-row u-mar-vert-xxs">
+    <div class="o-col-12 o-col-md-6">{{ data.param_table }}</div>
+    <div class="o-col-12 o-col-md-6">
+      <code>{{ data.examples }}</code>
+    </div>
+  </div>
 </div>

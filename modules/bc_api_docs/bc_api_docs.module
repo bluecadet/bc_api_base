@@ -23,13 +23,15 @@ function bc_api_docs_theme() {
  * Implements template_preprocess_hook().
  */
 function template_preprocess_api_endpoint(&$vars) {
-
   $route = $vars['endpoint_data']['route'];
   $annotations = $vars['endpoint_data']['annotations'];
 
   $vars['data'] = [];
   $vars['data']['path'] = $route->getPath();
   $vars['data']['methods'] = implode(", ", $route->getMethods());
+  $vars['data']['full_description'] = "";
+  $vars['data']['access'] = [];
+
   $vars['data']['param_table'] = [
     '#type' => 'table',
     '#header' => ['Name', 'Type', 'Description', 'Required', 'Default'],
@@ -38,20 +40,33 @@ function template_preprocess_api_endpoint(&$vars) {
   ];
 
   foreach ($annotations as $annotation) {
+    if (($annotation instanceof ApiDoc)) {
+
+      $vars['data']['full_description'] = $annotation->description;
+
+      if ($vars['endpoint_data']['resourceList'] && !empty($annotation->list_description)) {
+        $vars['data']['full_description'] = $annotation->list_description;
+      }
+      elseif (!empty($annotation->resource_description)) {
+        $vars['data']['full_description'] = $annotation->resource_description;
+      }
+    }
+
     if (($annotation instanceof ApiDoc || $annotation instanceof ApiBaseDoc) && isset($annotation->params)) {
       foreach ($annotation->params as $param) {
+        if (!(!$vars['endpoint_data']['resourceList'] && $param->listOnly)) {
+          $full_description = $param->description;
 
-        $full_description = $param->description;
+          $row = [
+            ['data' => ["#markup" => "<code>" . $param->name . "</code>"]],
+            $param->type,
+            $full_description,
+            ($param->required)? $param->required : "FALSE",
+            $param->default,
+          ];
 
-        $row = [
-          $param->name,
-          $param->type,
-          $full_description,
-          ($param->required)? $param->required : "FALSE",
-          $param->default,
-        ];
-
-        $vars['data']['param_table']['#rows'][$param->name] = $row;
+          $vars['data']['param_table']['#rows'][$param->name] = $row;
+        }
       }
     }
   }
@@ -60,4 +75,23 @@ function template_preprocess_api_endpoint(&$vars) {
     unset($vars['data']['param_table']);
   }
 
+  // Permissions.
+  if ($roles = $route->getRequirement("_role")) {
+    $vars['data']['access']['roles'] = ["#markup" => "Role(s): " . process_route_access_str($roles)];
+  }
+  if ($permissions = $route->getRequirement("_permission")) {
+    $vars['data']['access']['permissions'] = ["#markup" => "Permission(s): " . process_route_access_str($permissions)];
+  }
+
+  $vars['data']['examples'] = [
+    "#markup" => "Code Example",
+  ];
+}
+
+/**
+ * Process and format route access strings for documentation.
+ */
+function process_route_access_str(string $str) {
+  $str = str_replace([",", "+"], [" <b>AND</b> ", " <b>OR</b> "], $str);
+  return $str;
 }

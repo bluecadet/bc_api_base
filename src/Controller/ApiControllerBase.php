@@ -39,12 +39,14 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  *       type = "int",
  *       description = "Which page. Start at 0",
  *       default = "0",
+ *       listOnly = TRUE,
  *     ),
  *     @ApiParam(
  *       name = "limit",
  *       type = "int",
  *       description = "How many records on a page.",
  *       default = "500",
+ *       listOnly = TRUE,
  *     ),
  *     @ApiParam(
  *       name = "debug",

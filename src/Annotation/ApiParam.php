@@ -68,4 +68,11 @@ class ApiParam {
    */
   public $values;
 
+  /**
+   * List Param only.
+   *
+   * @var bool
+   */
+  public $listOnly = FALSE;
+
 }

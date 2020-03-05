@@ -52,6 +52,7 @@ class ApiDocsController extends ControllerBase {
     $query = db_select('router', 'r');
     $query->fields('r');
     $query->condition("r.path", "/api%%", "LIKE");
+    $query->orderBy("r.path", "ASC");
     $results = $query->execute()->fetchAll();
 
     $endpoints = [];
@@ -71,6 +72,7 @@ class ApiDocsController extends ControllerBase {
       $controller_class_ex = explode(":", $deaults['_controller']);
 
       $class_name = $controller_class_ex[0];
+      $method_name = $controller_class_ex[1];
       $reflectionClass = new \ReflectionClass($class_name);
       $annotations = $reader->getClassAnnotations($reflectionClass);
 
@@ -82,6 +84,7 @@ class ApiDocsController extends ControllerBase {
         'route' => $route,
         'annotations' => $annotations,
         'is_subclass' => is_subclass_of($class_name, "Drupal\bc_api_base\Controller\ApiControllerBase"),
+        'resourceList' => ($method_name == "getResourceList") ? TRUE : (($method_name == "getResource") ? FALSE : FALSE),
       ];
     }
 
