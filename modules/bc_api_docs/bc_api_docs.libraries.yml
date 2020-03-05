@@ -1,0 +1,9 @@
+code-prettify:
+  version: 1.0
+  css:
+    theme:
+      assets/dist/css/code-pretty.css: {}
+  js:
+    assets/dist/js/prettify/prettify.js: {}
+    assets/dist/js/bc_api_prettify.js: {}
+    # https://cdn.jsdelivr.net/gh/google/code-prettify@master/loader/run_prettify.js?lang=js: {}

@@ -23,6 +23,8 @@ function bc_api_docs_theme() {
  * Implements template_preprocess_hook().
  */
 function template_preprocess_api_endpoint(&$vars) {
+  $vars['#attached']['library'][] = 'bc_api_docs/code-prettify';
+
   $route = $vars['endpoint_data']['route'];
   $annotations = $vars['endpoint_data']['annotations'];
 
@@ -77,21 +79,60 @@ function template_preprocess_api_endpoint(&$vars) {
 
   // Permissions.
   if ($roles = $route->getRequirement("_role")) {
-    $vars['data']['access']['roles'] = ["#markup" => "Role(s): " . process_route_access_str($roles)];
+    $vars['data']['access']['roles'] = ["#markup" => "Role(s): " . _process_route_access_str($roles)];
   }
   if ($permissions = $route->getRequirement("_permission")) {
-    $vars['data']['access']['permissions'] = ["#markup" => "Permission(s): " . process_route_access_str($permissions)];
+    $vars['data']['access']['permissions'] = ["#markup" => "Permission(s): " . _process_route_access_str($permissions)];
   }
 
+  // Get Sample Code.
+  $sample_code = _get_sample_api_call_code($vars, $route);
+
   $vars['data']['examples'] = [
-    "#markup" => "Code Example",
+    "#markup" => $sample_code,
   ];
 }
 
 /**
  * Process and format route access strings for documentation.
  */
-function process_route_access_str(string $str) {
+function _process_route_access_str(string $str) {
   $str = str_replace([",", "+"], [" <b>AND</b> ", " <b>OR</b> "], $str);
   return $str;
+}
+
+function _get_sample_api_call_code(&$vars, $route) {
+  $sample = "";
+
+  // GETs
+  if (in_array("GET", $route->getMethods())) {
+    $params = $route->getOption('parameters');
+
+    if (empty($params)) {
+      $full_host = \Drupal::request()->getSchemeAndHttpHost();
+
+      $client = \Drupal::httpClient([
+        'curl' => [
+          CURLOPT_SSL_VERIFYPEER => FALSE,
+          CURLOPT_SSL_VERIFYHOST => FALSE,
+        ],
+        'verify' => FALSE,
+      ]);
+
+      // $request = $client->get($full_host . $route->getPath(), [
+      $request = $client->get("http://nab.local" . $route->getPath(), [
+        'query' => [
+          'api-key' => \Drupal::currentUser()->getAccount()->api_key,
+          'limit' => 2,
+        ]
+      ]);
+      $response = json_encode( json_decode($request->getBody()), JSON_PRETTY_PRINT);
+
+      $sample = $response;
+    }
+  }
+
+  // POSTs
+
+  return $sample;
 }

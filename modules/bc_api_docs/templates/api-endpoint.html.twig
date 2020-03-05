@@ -5,7 +5,7 @@
     </div>
   </div>
 
-  {% if data.full_description %}
+  {# {% if data.full_description %}
   <div class="o-row u-mar-vert-xxs">
     <div class="o-col-12">
       {{ data.full_description }}
@@ -21,12 +21,28 @@
       {% if data.access.permissions %}<p class="">{{ data.access.permissions }}</p>{% endif %}
     </div>
   </div>
-  {% endif %}
+  {% endif %} #}
 
   <div class="o-row u-mar-vert-xxs">
-    <div class="o-col-12 o-col-md-6">{{ data.param_table }}</div>
     <div class="o-col-12 o-col-md-6">
-      <code>{{ data.examples }}</code>
+
+      {{ data.full_description }}
+
+      <p class="u-text-bold">Access Restrictions</p>
+      {% if data.access.roles %}<p class="">{{ data.access.roles }}</p>{% endif %}
+      {% if data.access.permissions %}<p class="">{{ data.access.permissions }}</p>{% endif %}
+
+      {{ data.param_table }}
+
+    </div>
+    <div class="o-col-12 o-col-md-6">
+      {# <p class="u-text-bold">Sample Code</p> #}
+      {% if data.examples %}
+        <details>
+          <summary>Sample Code</summary>
+          <pre class="prettyprint linenums"><code class="language-js">{{ data.examples }}</code></pre>
+        </details>
+      {% endif %}
     </div>
   </div>
 </div>
