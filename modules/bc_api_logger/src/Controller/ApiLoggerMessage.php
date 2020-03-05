@@ -14,6 +14,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  * API Controller Messager.
  *
  * @ApiDoc(
+ *   description = "POST a message to the API logger.",
  *   params = {
  *     @ApiParam(
  *       name = "message",
@@ -27,7 +28,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  *       description = "Filter on on node status.",
  *       default = "7",
  *       required = TRUE,
- *       range = {0, 7},
+ *       rangeMin = 0,
+ *       rangeMax = 7,
  *     ),
  *     @ApiParam(
  *       name = "channel",
