@@ -126,9 +126,10 @@ function _get_sample_api_call_code(&$vars, $route) {
           'limit' => 2,
         ]
       ]);
-      $response = json_encode( json_decode($request->getBody()), JSON_PRETTY_PRINT);
+      // ksm((string) $request->getBody());
+      // $response = ( json_decode($request->getBody()), JSON_PRETTY_PRINT);
 
-      $sample = $response;
+      $sample = "";   $response;
     }
   }
 
