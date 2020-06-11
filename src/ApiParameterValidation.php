@@ -83,6 +83,33 @@ class ApiParameterValidation {
               }
               break;
 
+            case "int[]":
+              if ($query_bag->has($param->name) || $param->default) {
+                if (!is_array($raw_value)) {
+                  $errors[] = [
+                    'param' => $param->name,
+                    'error_msg' => "Parameter '" . $param->name . "' must be an array.",
+                  ];
+                }
+
+                $new_data = [];
+                foreach ($raw_value as $key => $item_raw) {
+                  $item_test = filter_var($item_raw, FILTER_VALIDATE_INT);
+
+                  if ($item_test === FALSE) {
+                    $errors[] = [
+                      'param' => $param->name,
+                      'error_msg' => "Parameter '" . $param->name . "[$key]' must be an int.",
+                    ];
+                  }
+
+                  $new_data[] = $item_test;
+                }
+
+                $params[$param->name] = $new_data;
+              }
+              break;
+
             case "float":
               // Validate it is a float.
               if ($query_bag->has($param->name) || $param->default) {
