@@ -19,7 +19,7 @@ class ApiCacheSettings extends FormBase {
    *
    * @var Drupal\Core\State\State
    */
-  private $drupalstate = [];
+  private $drupalState = [];
 
   /**
    * Entity Query.
