@@ -86,7 +86,8 @@ function template_preprocess_api_endpoint(&$vars) {
   }
 
   // Get Sample Code.
-  $sample_code = _get_sample_api_call_code($vars, $route);
+  // $sample_code = _get_sample_api_call_code($vars, $route);
+  $sample_code = "";
 
   $vars['data']['examples'] = [
     "#markup" => $sample_code,
@@ -119,8 +120,8 @@ function _get_sample_api_call_code(&$vars, $route) {
         'verify' => FALSE,
       ]);
 
-      // $request = $client->get($full_host . $route->getPath(), [
-      $request = $client->get("http://nab.local" . $route->getPath(), [
+      $request = $client->get($full_host . $route->getPath(), [
+      // $request = $client->get("http://nab.local" . $route->getPath(), [
         'query' => [
           'api-key' => \Drupal::currentUser()->getAccount()->api_key,
           'limit' => 2,
