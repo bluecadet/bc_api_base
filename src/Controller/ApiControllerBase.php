@@ -16,6 +16,7 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -420,7 +421,11 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
       return [];
     }
 
-    return new JsonResponse($this->return_data);
+    $response = new JsonResponse($this->return_data);
+    // Alter it.
+    $this->responseAlter($response);
+
+    return $response;
   }
 
   /**
@@ -482,7 +487,11 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
       return [];
     }
 
-    return new JsonResponse($this->return_data);
+    $response = new JsonResponse($this->return_data);
+    // Alter it.
+    $this->responseAlter($response);
+
+    return $response;
   }
 
   /**
@@ -533,5 +542,10 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
     $this->prev = "";
     $this->next = "";
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function responseAlter(Response $response) {}
 
 }

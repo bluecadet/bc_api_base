@@ -3,6 +3,7 @@
 namespace Drupal\bc_api_base\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * API Controller Interface.
@@ -72,6 +73,11 @@ interface ApiControllerInterface {
    *   An HTTP response.
    */
   public function getResourceList(Request $request);
+
+  /**
+   * Alter the response object before executing.
+   */
+  public function responseAlter(Response $response);
 
   /**
    * Get Api Resource Query Data.
