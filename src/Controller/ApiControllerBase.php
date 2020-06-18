@@ -411,6 +411,9 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
       $this->return_data['data'] = $this->data;
       $this->return_data['resultTotal'] = $this->resultTotal;
 
+      // Alter data some more.
+      $this->responseDataAlter();
+
       $this->cache->set($cid, $this->return_data, (time() + $cache_time), $this->cacheTags);
 
       $this->return_data['cacheHit'] = FALSE;
@@ -478,6 +481,9 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
       $this->return_data['prev'] = $this->prev;
       $this->return_data['next'] = $this->next;
 
+      // Alter data some more.
+      $this->responseDataAlter();
+
       $this->cache->set($cid, $this->return_data, (time() + $cache_time), $this->cacheTags);
       $this->return_data['cacheHit'] = FALSE;
     }
@@ -542,6 +548,11 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
     $this->prev = "";
     $this->next = "";
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function responseDataAlter() {}
 
   /**
    * {@inheritdoc}
