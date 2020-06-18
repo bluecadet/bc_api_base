@@ -203,7 +203,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
    *
    * @var Drupal\Core\State\State
    */
-  private $drupalstate = [];
+  private $drupalState = [];
 
   /**
    * Drupal State obj.
