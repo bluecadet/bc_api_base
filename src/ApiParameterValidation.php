@@ -86,10 +86,8 @@ class ApiParameterValidation {
             case "int[]":
               if ($query_bag->has($param->name) || $param->default) {
                 if (!is_array($raw_value)) {
-                  $errors[] = [
-                    'param' => $param->name,
-                    'error_msg' => "Parameter '" . $param->name . "' must be an array.",
-                  ];
+                  // Try to Parse value, comma seperated.
+                  $raw_value = explode(",", $raw_value);
                 }
 
                 $new_data = [];
