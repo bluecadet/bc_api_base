@@ -61,6 +61,13 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 class ApiControllerBase extends ControllerBase implements ApiControllerInterface {
 
   /**
+   * The Container.
+   *
+   * @var \Symfony\Component\DependencyInjection\ContainerInterface
+   */
+  private $container;
+
+  /**
    * The initial Request Object.
    *
    * @var \Symfony\Component\HttpFoundation\Request
@@ -216,6 +223,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
    * Class constructor.
    */
   public function __construct(
+    $container,
     AssetApiService $assetService,
     ValueTransformationService $transformer,
     ApiParameterValidation $query_validation,
@@ -225,6 +233,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
     EntityTypeManagerInterface $entityTypeManager,
     $drupal_state) {
 
+    $this->container = $container;
     $this->assetService = $assetService;
     $this->initCacheTags();
     $this->transformer = $transformer;
@@ -242,6 +251,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
   public static function create(ContainerInterface $container) {
     // Instantiates this form class.
     return new static(
+      $container,
       $container->get('bc_api_base.asset'),
       $container->get('bc_api_base.valueTransformer'),
       $container->get('bc_api_base.param_validation'),
@@ -251,6 +261,16 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
       $container->get('entity_type.manager'),
       $container->get('state')
     );
+  }
+
+  /**
+   * Provides protecgted access to the container.
+   *
+   * Provide this so if sub classes need something they do not have to recreate
+   * the creat and construct methods.
+   */
+  protected function getService(string $service_id) {
+    return $this->container->get($service_id);
   }
 
   /**
