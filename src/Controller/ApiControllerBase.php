@@ -15,9 +15,10 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\Routing\CurrentRouteMatch;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
@@ -131,6 +132,13 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
   protected $params = [];
 
   /**
+   * Default QueryParams.
+   *
+   * @var array
+   */
+  protected $defaultParams = [];
+
+  /**
    * Params not exposed in the url.
    *
    * These are static for this endpoint or derived through code. Not alterable
@@ -217,7 +225,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
    *
    * @var Drupal\bc_api_base\ApiParameterValidation
    */
-  private $queryValidation;
+  protected $queryValidation;
 
   /**
    * Class constructor.
@@ -338,6 +346,11 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
     $reflectionClass = new \ReflectionClass($class);
     $annotations = $reader->getClassAnnotations($reflectionClass);
 
+    // Default params.
+    $empty_query_bag = new ParameterBag([]);
+    list($this->defaultParams, $no_errors) = $this->queryValidation->validateQueryParams($annotations, $empty_query_bag);
+
+    // Actual Params.
     list($params, $errors) = $this->queryValidation->validateQueryParams($annotations, $this->request->query);
     $this->params = array_merge($this->params, $params);
 
