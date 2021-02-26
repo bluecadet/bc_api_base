@@ -9,7 +9,7 @@ use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\State\State;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
-use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -66,7 +66,7 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  public function onException(GetResponseForExceptionEvent $event) {
+  public function onException(ExceptionEvent $event) {
     // Grab the exception.
     $exception = $event->getException();
 

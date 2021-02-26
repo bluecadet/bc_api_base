@@ -17,3 +17,6 @@ bc_api_example.pirates_detail:
     _permission: 'use api'
   options:
     _auth: [ 'key_auth' ]
+    parameters:
+      nid:
+        type: entity:node

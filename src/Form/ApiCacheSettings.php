@@ -3,8 +3,10 @@
 namespace Drupal\bc_api_base\Form;
 
 use Drupal\bc_aicc\ImportBatch;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Routing\RouteProvider;
 use Drupal\file\Entity\File;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -13,6 +15,13 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * API Cache length settings Form.
  */
 class ApiCacheSettings extends FormBase {
+
+  /**
+   * Database Connection.
+   *
+   * @var Drupal\Core\Database\Connection
+   */
+  private $database;
 
   /**
    * Drupal State obj.
@@ -29,11 +38,20 @@ class ApiCacheSettings extends FormBase {
   protected $routeProvider;
 
   /**
+   * The Messenger service.
+   *
+   * @var \Drupal\Core\Messenger\MessengerInterface
+   */
+  protected $messenger;
+
+  /**
    * Class constructor.
    */
-  public function __construct($drupal_state, RouteProvider $route_provider) {
+  public function __construct(Connection $database, $drupal_state, RouteProvider $route_provider, MessengerInterface $messenger) {
+    $this->database = $database;
     $this->drupalState = $drupal_state;
     $this->routeProvider = $route_provider;
+    $this->messenger = $messenger;
   }
 
   /**
@@ -43,8 +61,10 @@ class ApiCacheSettings extends FormBase {
     // Instantiates this form class.
     return new static(
       // Load the service required to construct this class.
+      $container->get('database'),
       $container->get('state'),
-      $container->get('router.route_provider')
+      $container->get('router.route_provider'),
+      $container->get('messenger')
     );
   }
 
@@ -127,7 +147,7 @@ class ApiCacheSettings extends FormBase {
   protected function getEndpointClasses() {
     $classes = [];
 
-    $query = db_select('router', 'r');
+    $query = $this->database->select('router', 'r');
     $query->fields('r');
     $query->condition("r.path", "/api%%", "LIKE");
     $results = $query->execute()->fetchAll();

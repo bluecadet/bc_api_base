@@ -2,19 +2,27 @@
 
 namespace Drupal\bc_api_docs\Controller;
 
-use Drupal\Core\Controller\ControllerBase;
-use Symfony\Component\HttpFoundation\Request;
 use Drupal\bc_api_base\Annotation\ApiBaseDoc;
 use Drupal\bc_api_base\Annotation\ApiDoc;
 use Drupal\bc_api_base\Annotation\ApiParam;
 use Drupal\Component\Annotation\Doctrine\SimpleAnnotationReader;
+use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\Database\Connection;
 use Drupal\Core\Routing\RouteProvider;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Controller to build out API documentation.
  */
 class ApiDocsController extends ControllerBase {
+
+  /**
+   * Database Connection.
+   *
+   * @var Drupal\Core\Database\Connection
+   */
+  private $database;
 
   /**
    * Entity Query.
@@ -26,7 +34,8 @@ class ApiDocsController extends ControllerBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(RouteProvider $route_provider) {
+  public function __construct(Connection $database, RouteProvider $route_provider) {
+    $this->database = $database;
     $this->routeProvider = $route_provider;
   }
 
@@ -35,6 +44,7 @@ class ApiDocsController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
+      $container->get('database'),
       $container->get('router.route_provider')
     );
   }
@@ -49,7 +59,7 @@ class ApiDocsController extends ControllerBase {
     new ApiBaseDoc([]);
     new ApiParam([]);
 
-    $query = db_select('router', 'r');
+    $query = $this->database->select('router', 'r');
     $query->fields('r');
     $query->condition("r.path", "/api%%", "LIKE");
     $query->orderBy("r.path", "ASC");
