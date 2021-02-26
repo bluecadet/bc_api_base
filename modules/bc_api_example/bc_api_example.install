@@ -79,15 +79,19 @@ function bc_api_example_install() {
  */
 function bc_api_example_uninstall() {
   // Delete all nationality Terms.
+  $storage_handler_taxonomy_term = \Drupal::entityTypeManager()->getStorage("taxonomy_term");
   $result = \Drupal::entityQuery('taxonomy_term')
       ->condition('vid', 'nationalities')
       ->execute();
-  entity_delete_multiple('taxonomy_term', $result);
+  $terms = $storage_handler_taxonomy_term->loadMultiple($result);
+  $storage_handler_taxonomy_term->delete($terms);
 
   // Delete all Ship Nodes.
   // Delete all Pirate Nodes.
+  $storage_handler_node = \Drupal::entityTypeManager()->getStorage("node");
   $result = \Drupal::entityQuery('node')
       ->condition('type', ['ship', 'pirate'], 'IN')
       ->execute();
-  entity_delete_multiple('node', $result);
+  $nodes = $storage_handler_node->loadMultiple($result);
+  $storage_handler_node->delete($nodes);
 }
