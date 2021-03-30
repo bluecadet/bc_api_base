@@ -27,7 +27,7 @@ class CinderPlatform extends PlatformBase {
     $new_text = strip_tags($new_text, CINDER_ALLOWED_TAGS);
 
     $new_text = trim($new_text);
-    $new_text = rtrim($new_text, "<br/>");
+    $new_text = preg_replace("/<br\/>$/is", "", $new_text);
 
     return $new_text;
   }
