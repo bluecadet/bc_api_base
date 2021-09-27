@@ -13,8 +13,8 @@
   "minimum-stability": "dev",
   "require": {
     "php": "^7.0",
-    "composer/installers": "^1.0@dev",
+    "composer/installers": "^1.9",
     "drupal/key_auth": "^1.0",
-    "oomphinc/composer-installers-extender": "~1.0"
+    "oomphinc/composer-installers-extender": "^2.0"
   }
 }
