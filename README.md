@@ -9,9 +9,12 @@ If you have a full instal and after enabling the simpletest module: (Login seems
 
 ## Changelog
 
+- Working on D9 compatibility
+
 ### 8.x-2.0.1
 
 - Update readme
+- Fix OnException Backwards compatibility with Drupal 8
 - Update Drupal module versions appropriatly
 
 ### 8.x-2.0.0
