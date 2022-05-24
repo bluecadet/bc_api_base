@@ -11,6 +11,9 @@ If you have a full instal and after enabling the simpletest module: (Login seems
 
 - Working on D9 compatibility
 
+### 8.x-2.0.2
+
+- Fixed Deprecated drupal_set_message() func
 ### 8.x-2.0.1
 
 - Update readme

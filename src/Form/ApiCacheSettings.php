@@ -138,7 +138,8 @@ class ApiCacheSettings extends FormBase {
 
     $this->drupalState->set('bc_api_base.cache.settings', $to_save);
 
-    drupal_set_message($this->t('You have saved your settings.'));
+    // drupal_set_message($this->t('You have saved your settings.'));
+    $this->messenger()->addMessage($this->t('You have saved your settings.'));
   }
 
   /**
