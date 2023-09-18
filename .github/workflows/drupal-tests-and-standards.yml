@@ -255,6 +255,11 @@ jobs:
       #       --sqlite /tmp/test.sqlite \
       #       --url $SIMPLETEST_BASE_URL $DRUPAL_MODULE_NAME
 
+      - name: Debug
+        run: |
+          pwd
+          ls -sla $MODULE_FOLDER
+
       # Uncomment this step to run tests using phpunit. Your module is expected
       # to ship with 'phpunit.xml' file. See the repository for an example
       # phpunit.xml file.
