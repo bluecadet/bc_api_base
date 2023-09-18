@@ -2,7 +2,7 @@
 
 ## Testing archiving:
 
-`git archive -o bluecadet_utilities.tar HEAD`
+`git archive -o bc_api_base.tar HEAD`
 
 ## npm commands
 

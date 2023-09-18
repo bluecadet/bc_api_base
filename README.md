@@ -9,7 +9,12 @@ If you have a full instal and after enabling the simpletest module: (Login seems
 
 ## Changelog
 
-- Working on D9 compatibility
+- Working on D10 compatibility
+
+### 8.x-3.0.0
+
+- Added Drupal 10 Compatability
+- Code Style changes
 
 ### 8.x-2.0.2
 
