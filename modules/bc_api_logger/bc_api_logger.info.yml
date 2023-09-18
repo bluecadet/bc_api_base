@@ -1,9 +1,11 @@
 name: "Bluecadet API Logger"
 type: module
 description: Add logging functionality for API base.
+core_version_requirement: ^9 || ^10
+
 package: Bluecadet
-version: '8.x-3.0.0'
-core_version_requirement: ^9
 
 dependencies:
   - bc_api_base:bc_api_base
+
+configure: null
