@@ -2,13 +2,11 @@
 
 namespace Drupal\bc_api_base\Form;
 
-use Drupal\bc_aicc\ImportBatch;
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Messenger\MessengerInterface;
 use Drupal\Core\Routing\RouteProvider;
-use Drupal\file\Entity\File;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -111,7 +109,7 @@ class ApiCacheSettings extends FormBase {
         $form['classes'][$class]['routes'][$i] = [
           '#type' => 'number',
           '#title' => $route . ' Cache Time',
-          '#default_value' => isset($settings['classes'][$class]['routes'][$i]) ? $settings['classes'][$class]['routes'][$i] : 0,
+          '#default_value' => $settings['classes'][$class]['routes'][$i] ?? 0,
           '#description' => $this->t('In number of seconds'),
           '#min' => 0,
         ];
@@ -138,7 +136,6 @@ class ApiCacheSettings extends FormBase {
 
     $this->drupalState->set('bc_api_base.cache.settings', $to_save);
 
-    // drupal_set_message($this->t('You have saved your settings.'));
     $this->messenger()->addMessage($this->t('You have saved your settings.'));
   }
 

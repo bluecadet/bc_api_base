@@ -10,7 +10,7 @@ use Drupal\bc_api_base\Annotation\ApiDoc;
 use Drupal\Component\Annotation\Doctrine\SimpleAnnotationReader;
 
 /**
- * implements hook_theme().
+ * Implements hook_theme().
  */
 function bc_api_docs_theme() {
   return [
@@ -19,6 +19,7 @@ function bc_api_docs_theme() {
     ],
   ];
 }
+
 /**
  * Implements template_preprocess_hook().
  */
@@ -102,10 +103,13 @@ function _process_route_access_str(string $str) {
   return $str;
 }
 
+/**
+ * Gets sample API call code.
+ */
 function _get_sample_api_call_code(&$vars, $route) {
   $sample = "";
 
-  // GETs
+  // GETs.
   if (in_array("GET", $route->getMethods())) {
     $params = $route->getOption('parameters');
 
@@ -130,11 +134,12 @@ function _get_sample_api_call_code(&$vars, $route) {
       // ksm((string) $request->getBody());
       // $response = ( json_decode($request->getBody()), JSON_PRETTY_PRINT);
 
-      $sample = "";   $response;
+      $sample = "";
+      // $response;
     }
   }
 
-  // POSTs
+  // POSTs.
 
   return $sample;
 }

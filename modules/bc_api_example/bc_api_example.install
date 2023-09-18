@@ -81,9 +81,9 @@ function bc_api_example_uninstall() {
   // Delete all nationality Terms.
   $storage_handler_taxonomy_term = \Drupal::entityTypeManager()->getStorage("taxonomy_term");
   $result = \Drupal::entityQuery('taxonomy_term')
-      ->condition('vid', 'nationalities')
-      ->accessCheck(FALSE)
-      ->execute();
+    ->condition('vid', 'nationalities')
+    ->accessCheck(FALSE)
+    ->execute();
   $terms = $storage_handler_taxonomy_term->loadMultiple($result);
   $storage_handler_taxonomy_term->delete($terms);
 
@@ -91,9 +91,9 @@ function bc_api_example_uninstall() {
   // Delete all Pirate Nodes.
   $storage_handler_node = \Drupal::entityTypeManager()->getStorage("node");
   $result = \Drupal::entityQuery('node')
-      ->condition('type', ['ship', 'pirate'], 'IN')
-      ->accessCheck(FALSE)
-      ->execute();
+    ->condition('type', ['ship', 'pirate'], 'IN')
+    ->accessCheck(FALSE)
+    ->execute();
   $nodes = $storage_handler_node->loadMultiple($result);
   $storage_handler_node->delete($nodes);
 }
