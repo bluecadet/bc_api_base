@@ -160,6 +160,8 @@ jobs:
         run: |
           pwd
           ls -sla
+          echo $MODULE_FOLDER
+          ls -sla $MODULE_FOLDER
 
       # Clone Drupal core into $DRUPAL_ROOT folder.
       # Core version can be set by changing $DRUPAL_CORE_VERSION.
@@ -192,6 +194,8 @@ jobs:
       - name: Debug
         run: |
           pwd
+          ls -sla
+          echo $MODULE_FOLDER
           ls -sla $MODULE_FOLDER
 
       - uses: actions/checkout@v3
@@ -201,6 +205,8 @@ jobs:
       - name: Debug
         run: |
           pwd
+          ls -sla
+          echo $MODULE_FOLDER
           ls -sla $MODULE_FOLDER
 
       # PHP 8+ requires newer phpunit, use core's composer script
@@ -277,6 +283,8 @@ jobs:
       - name: Debug
         run: |
           pwd
+          ls -sla
+          echo $MODULE_FOLDER
           ls -sla $MODULE_FOLDER
 
       # Uncomment this step to run tests using phpunit. Your module is expected
