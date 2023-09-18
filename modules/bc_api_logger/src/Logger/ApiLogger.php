@@ -70,16 +70,16 @@ class ApiLogger implements LoggerInterface {
 
       // Add more API specific context.
       // Path.
-      $context['path'] = $context['request']->getPathInfo();
+      $context['path'] = isset($context['request']) ? $context['request']->getPathInfo() : "";
 
       // Method.
-      $context['method'] = $context['request']->getMethod();
+      $context['method'] = isset($context['request']) ? $context['request']->getMethod() : "";
 
       // Query params.
-      $context['query_string'] = $context['request']->getQueryString();
+      $context['query_string'] = isset($context['request']) ? $context['request']->getQueryString() : "";
 
       // Post params.
-      $context['request_params'] = $context['request']->request->all();
+      $context['request_params'] = isset($context['request']) ? $context['request']->request->all() : "";
 
       // Convert PSR3-style messages to
       // \Drupal\Component\Render\FormattableMarkup style, so they can be
