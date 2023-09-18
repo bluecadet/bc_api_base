@@ -191,27 +191,6 @@ jobs:
           composer config --json --merge extra.installer-paths '{"modules/bluecadet/{$name}": ["type:custom-drupal-module"]}'
           composer require mglaman/drupal-check --dev
           composer require bluecadet/$DRUPAL_MODULE_NAME --prefer-source
-          composer config repositories
-
-      - name: Debug
-        continue-on-error: true
-        run: |
-          pwd
-          ls -sla
-          echo $MODULE_FOLDER
-          ls -sla $MODULE_FOLDER
-
-      - uses: actions/checkout@v3
-        with:
-          fetch-depth: 1
-
-      - name: Debug
-        continue-on-error: true
-        run: |
-          pwd
-          ls -sla
-          echo $MODULE_FOLDER
-          ls -sla $MODULE_FOLDER
 
       # PHP 8+ requires newer phpunit, use core's composer script
       # to upgrade it.
@@ -283,14 +262,6 @@ jobs:
       #       --php /usr/local/bin/php --color --verbose \
       #       --sqlite /tmp/test.sqlite \
       #       --url $SIMPLETEST_BASE_URL $DRUPAL_MODULE_NAME
-
-      - name: Debug
-        continue-on-error: true
-        run: |
-          pwd
-          ls -sla
-          echo $MODULE_FOLDER
-          ls -sla $MODULE_FOLDER
 
       # Uncomment this step to run tests using phpunit. Your module is expected
       # to ship with 'phpunit.xml' file. See the repository for an example
