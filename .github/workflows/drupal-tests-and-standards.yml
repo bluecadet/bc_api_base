@@ -189,6 +189,20 @@ jobs:
           composer require mglaman/drupal-check --dev
           composer require bluecadet/$DRUPAL_MODULE_NAME
 
+      - name: Debug
+        run: |
+          pwd
+          ls -sla $MODULE_FOLDER
+
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - name: Debug
+        run: |
+          pwd
+          ls -sla $MODULE_FOLDER
+
       # PHP 8+ requires newer phpunit, use core's composer script
       # to upgrade it.
       - name: Upgrade phpunit
