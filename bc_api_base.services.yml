@@ -22,16 +22,19 @@ services:
 
   bc_api_base.file:
     class: Drupal\bc_api_base\FileApiService
+    arguments: ['@file_url_generator']
 
   bc_api_base.image:
     class: Drupal\bc_api_base\ImageApiService
-    arguments: ['@image.factory', '@config.factory']
+    arguments: ['@file_url_generator', '@image.factory', '@config.factory']
 
   bc_api_base.audio:
     class: Drupal\bc_api_base\AudioApiService
+    arguments: ['@file_url_generator']
 
   bc_api_base.video:
     class: Drupal\bc_api_base\VideoApiService
+    arguments: ['@file_url_generator']
 
   bc_api_base.valueTransformer:
     class: Drupal\bc_api_base\ValueTransformationService

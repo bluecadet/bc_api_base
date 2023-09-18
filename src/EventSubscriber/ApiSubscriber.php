@@ -8,7 +8,7 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\State\State;
-use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -67,7 +67,7 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
    */
   public function onException($event) {
     // Grab the exception.
-    $exception = $event->getException();
+    $exception = $event->getThrowable();
 
     // Make the exception available for example when rendering a block.
     $request = $event->getRequest();
@@ -132,13 +132,13 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
   /**
    * Redirects on 400 Bad Request kernel exceptions.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
    *   The Event to process.
    */
-  public function on400(GetResponseEvent $event) {
+  public function on400(RequestEvent $event) {
 
     $request = $event->getRequest();
-    $exception = $event->getException();
+    $exception = $event->getThrowable();
 
     if (strpos($request->getRequestUri(), "/api/") === 0 || $request->getRequestUri() == "/api") {
       $data = [
@@ -157,13 +157,13 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
   /**
    * Redirects on 403 Access Denied kernel exceptions.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
    *   The Event to process.
    */
-  public function on403(GetResponseEvent $event) {
+  public function on403(RequestEvent $event) {
 
     $request = $event->getRequest();
-    $exception = $event->getException();
+    $exception = $event->getThrowable();
 
     if (strpos($request->getRequestUri(), "/api/") === 0 || $request->getRequestUri() == "/api") {
 
@@ -183,13 +183,13 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
   /**
    * Redirects on 404 Not Found kernel exceptions.
    *
-   * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
    *   The Event to process.
    */
-  public function on404(GetResponseEvent $event) {
+  public function on404(RequestEvent $event) {
 
     $request = $event->getRequest();
-    $exception = $event->getException();
+    $exception = $event->getThrowable();
 
     if (strpos($request->getRequestUri(), "/api/") === 0 || $request->getRequestUri() == "/api") {
       $data = [

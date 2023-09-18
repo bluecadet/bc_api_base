@@ -51,8 +51,8 @@ class QueryValidationTests extends UnitTestCase {
 
     $result1 = $val->validateQueryParams($annotations, $query_bag);
 
-    $this->assertArrayEquals(["string1" => "test"], $result1[0], "1.1 There should be one param set.");
-    $this->assertArrayEquals([], $result1[1], "1.2 There should be no errors.");
+    $this->assertEquals(["string1" => "test"], $result1[0], "1.1 There should be one param set.");
+    $this->assertEquals([], $result1[1], "1.2 There should be no errors.");
 
     // Default for string param.
     $param2 = new ApiParam();
@@ -68,8 +68,8 @@ class QueryValidationTests extends UnitTestCase {
 
     $result1 = $val->validateQueryParams($annotations, $query_bag);
 
-    $this->assertArrayEquals(["string2" => "Does this appear"], $result1[0], "2.1 There should be one param set from default value.");
-    $this->assertArrayEquals([], $result1[1], "2.2 There should be no errors.");
+    $this->assertEquals(["string2" => "Does this appear"], $result1[0], "2.1 There should be one param set from default value.");
+    $this->assertEquals([], $result1[1], "2.2 There should be no errors.");
 
     // Error on required param.
     $param3 = new ApiParam();
@@ -85,7 +85,7 @@ class QueryValidationTests extends UnitTestCase {
 
     $result1 = $val->validateQueryParams($annotations, $query_bag);
 
-    $this->assertArrayEquals(["string3" => ""], $result1[0], "3.1 There should be one param set from default value.");
+    $this->assertEquals(["string3" => ""], $result1[0], "3.1 There should be one param set from default value.");
     $this->assertEquals('string3', $result1[1][0]['param'], "3.2 There should be an errors.");
 
   }
@@ -116,8 +116,8 @@ class QueryValidationTests extends UnitTestCase {
 
     $result1 = $val->validateQueryParams($annotations, $query_bag);
 
-    $this->assertArrayEquals(["bool1" => TRUE], $result1[0], "1.1 There should be one param set.");
-    $this->assertArrayEquals([], $result1[1], "1.2 There should be no errors.");
+    $this->assertEquals(["bool1" => TRUE], $result1[0], "1.1 There should be one param set.");
+    $this->assertEquals([], $result1[1], "1.2 There should be no errors.");
 
     // Default for bool param.
     $param2 = new ApiParam();
@@ -133,8 +133,8 @@ class QueryValidationTests extends UnitTestCase {
 
     $result1 = $val->validateQueryParams($annotations, $query_bag);
 
-    $this->assertArrayEquals(["bool2" => TRUE], $result1[0], "2.1 There should be one param set from default value.");
-    $this->assertArrayEquals([], $result1[1], "2.2 There should be no errors.");
+    $this->assertEquals(["bool2" => TRUE], $result1[0], "2.1 There should be one param set from default value.");
+    $this->assertEquals([], $result1[1], "2.2 There should be no errors.");
 
     // Error on required param.
     $param3 = new ApiParam();
@@ -150,7 +150,7 @@ class QueryValidationTests extends UnitTestCase {
 
     $result1 = $val->validateQueryParams($annotations, $query_bag);
 
-    $this->assertArrayEquals(["bool3" => TRUE], $result1[0], "3.1 There should be one param set from default value.");
+    $this->assertEquals(["bool3" => TRUE], $result1[0], "3.1 There should be one param set from default value.");
     $this->assertEquals('bool3', $result1[1][0]['param'], "3.2 There should be an errors.");
 
     // Different Values of TRUE. String|bool|int in queray param.
@@ -185,12 +185,12 @@ class QueryValidationTests extends UnitTestCase {
 
     $result1 = $val->validateQueryParams($annotations, $query_bag);
 
-    $this->assertArrayEquals([
+    $this->assertEquals([
       "bool4" => TRUE,
       "bool5" => TRUE,
       "bool6" => TRUE,
     ], $result1[0], "4.1 There should be one param set from default value.");
-    $this->assertArrayEquals([], $result1[1], "4.2 There should be no errors.");
+    $this->assertEquals([], $result1[1], "4.2 There should be no errors.");
 
   }
 
@@ -220,8 +220,8 @@ class QueryValidationTests extends UnitTestCase {
 
     $result1 = $val->validateQueryParams($annotations, $query_bag);
 
-    $this->assertArrayEquals(["int1" => 4], $result1[0], "1.1 There should be one param set.");
-    $this->assertArrayEquals([], $result1[1], "1.2 There should be no errors.");
+    $this->assertEquals(["int1" => 4], $result1[0], "1.1 There should be one param set.");
+    $this->assertEquals([], $result1[1], "1.2 There should be no errors.");
 
     // Default for int param.
     $param2 = new ApiParam();
@@ -237,8 +237,8 @@ class QueryValidationTests extends UnitTestCase {
 
     $result1 = $val->validateQueryParams($annotations, $query_bag);
 
-    $this->assertArrayEquals(["int2" => 42], $result1[0], "2.1 There should be one param set from default value.");
-    $this->assertArrayEquals([], $result1[1], "2.2 There should be no errors.");
+    $this->assertEquals(["int2" => 42], $result1[0], "2.1 There should be one param set from default value.");
+    $this->assertEquals([], $result1[1], "2.2 There should be no errors.");
 
     // Error on required param.
     $param3 = new ApiParam();
@@ -254,7 +254,7 @@ class QueryValidationTests extends UnitTestCase {
 
     $result1 = $val->validateQueryParams($annotations, $query_bag);
 
-    $this->assertArrayEquals(["int3" => 42], $result1[0], "3.1 There should be one param set from default value.");
+    $this->assertEquals(["int3" => 42], $result1[0], "3.1 There should be one param set from default value.");
     $this->assertEquals('int3', $result1[1][0]['param'], "3.2 There should be one error.");
 
     // Error on Float value.
@@ -273,7 +273,7 @@ class QueryValidationTests extends UnitTestCase {
 
     $result1 = $val->validateQueryParams($annotations, $query_bag);
 
-    $this->assertArrayEquals(["int4" => FALSE], $result1[0], "4.1 There should be one param set.");
+    $this->assertEquals(["int4" => FALSE], $result1[0], "4.1 There should be one param set.");
     $this->assertEquals('int4', $result1[1][0]['param'], "4.2 There should be no errors.");
 
   }
@@ -304,8 +304,8 @@ class QueryValidationTests extends UnitTestCase {
 
     $result1 = $val->validateQueryParams($annotations, $query_bag);
 
-    $this->assertArrayEquals(["float1" => 42.5], $result1[0], "1.1 There should be one param set.");
-    $this->assertArrayEquals([], $result1[1], "1.2 There should be no errors.");
+    $this->assertEquals(["float1" => 42.5], $result1[0], "1.1 There should be one param set.");
+    $this->assertEquals([], $result1[1], "1.2 There should be no errors.");
 
     // Default for int param.
     $param2 = new ApiParam();
@@ -321,8 +321,8 @@ class QueryValidationTests extends UnitTestCase {
 
     $result1 = $val->validateQueryParams($annotations, $query_bag);
 
-    $this->assertArrayEquals(["float2" => 42.5], $result1[0], "2.1 There should be one param set from default value.");
-    $this->assertArrayEquals([], $result1[1], "2.2 There should be no errors.");
+    $this->assertEquals(["float2" => 42.5], $result1[0], "2.1 There should be one param set from default value.");
+    $this->assertEquals([], $result1[1], "2.2 There should be no errors.");
 
     // Error on required param.
     $param3 = new ApiParam();
@@ -338,7 +338,7 @@ class QueryValidationTests extends UnitTestCase {
 
     $result1 = $val->validateQueryParams($annotations, $query_bag);
 
-    $this->assertArrayEquals(["float3" => 42.5], $result1[0], "3.1 There should be one param set from default value.");
+    $this->assertEquals(["float3" => 42.5], $result1[0], "3.1 There should be one param set from default value.");
     $this->assertEquals('float3', $result1[1][0]['param'], "3.2 There should be one error.");
   }
 
@@ -369,8 +369,8 @@ class QueryValidationTests extends UnitTestCase {
 
     $result1 = $val->validateQueryParams($annotations, $query_bag);
 
-    $this->assertArrayEquals(["enum1" => "Bert"], $result1[0], "1.1 There should be one param set.");
-    $this->assertArrayEquals([], $result1[1], "1.2 There should be no errors.");
+    $this->assertEquals(["enum1" => "Bert"], $result1[0], "1.1 There should be one param set.");
+    $this->assertEquals([], $result1[1], "1.2 There should be no errors.");
 
     // Default for int param.
     $param2 = new ApiParam();
@@ -387,8 +387,8 @@ class QueryValidationTests extends UnitTestCase {
 
     $result1 = $val->validateQueryParams($annotations, $query_bag);
 
-    $this->assertArrayEquals(["enum2" => "Ernie"], $result1[0], "2.1 There should be one param set from default value.");
-    $this->assertArrayEquals([], $result1[1], "2.2 There should be no errors.");
+    $this->assertEquals(["enum2" => "Ernie"], $result1[0], "2.1 There should be one param set from default value.");
+    $this->assertEquals([], $result1[1], "2.2 There should be no errors.");
 
     // Error on required param.
     $param3 = new ApiParam();
@@ -405,7 +405,7 @@ class QueryValidationTests extends UnitTestCase {
 
     $result1 = $val->validateQueryParams($annotations, $query_bag);
 
-    $this->assertArrayEquals(["enum3" => 42], $result1[0], "3.1 There should be one param set from default value.");
+    $this->assertEquals(["enum3" => 42], $result1[0], "3.1 There should be one param set from default value.");
     $this->assertEquals("enum3", $result1[1][0]['param'], "3.2 There should be one error.");
 
     // Test bad input for default value.
@@ -423,7 +423,7 @@ class QueryValidationTests extends UnitTestCase {
 
     $result1 = $val->validateQueryParams($annotations, $query_bag);
 
-    $this->assertArrayEquals(["enum4" => "Elmo"], $result1[0], "4.1 There should be one param set from default value.");
+    $this->assertEquals(["enum4" => "Elmo"], $result1[0], "4.1 There should be one param set from default value.");
     $this->assertEquals("enum4", $result1[1][0]['param'], "4.2 There should be an errors.");
   }
 

@@ -4,6 +4,7 @@ namespace Drupal\bc_api_base;
 
 use Drupal\image\Entity\ImageStyle;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\File\FileUrlGenerator;
 use Drupal\Core\Image\ImageFactory;
 use Drupal\crop\Entity\Crop;
 
@@ -36,8 +37,8 @@ class ImageApiService extends AssetApiServiceBase {
   /**
    * {@inheritdoc}
    */
-  public function __construct(ImageFactory $image_factory, ConfigFactoryInterface $config_factory) {
-    parent::__construct();
+  public function __construct(FileUrlGenerator $file_url_generator, ImageFactory $image_factory, ConfigFactoryInterface $config_factory) {
+    parent::__construct($file_url_generator);
 
     $this->imageFactory = $image_factory;
     $this->configFactory = $config_factory;

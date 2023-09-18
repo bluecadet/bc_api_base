@@ -79,10 +79,10 @@ class ResponseTests extends BrowserTestBase {
     // Check that we get...
 
     $this->drupalGet('api');
-    $this->assertResponse(404);
+    $this->assertSession()->statusCodeEquals(404);
 
     $this->drupalGet('api/pirates');
-    $this->assertResponse(403);
+    $this->assertSession()->statusCodeEquals(403);
 
     // Create API user.
     $user = $this->drupalCreateUser(['use api', 'use key authentication']);
@@ -96,11 +96,11 @@ class ResponseTests extends BrowserTestBase {
         'api-key' => $user->api_key->value,
       ],
     ]);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     // Call with Header param
     $this->drupalGet('api/pirates', [], ['api-key' => $user->api_key->value]);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
   }
 
   /**
@@ -120,19 +120,19 @@ class ResponseTests extends BrowserTestBase {
         'api-key' => $user->api_key->value,
       ],
     ]);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
     $data = json_decode($data);
 
     // Call with Header param
     $this->drupalGet('api/pirates', [], ['api-key' => $user->api_key->value]);
-    $this->assertResponse(200);
+    $this->assertSession()->statusCodeEquals(200);
 
-    module_load_include('inc', 'bc_api_example', 'bc_api_example.data');
+    Drupal::moduleHandler()->loadInclude('bc_api_example', 'inc', 'bc_api_example.data');
 
     // Check we have a proper result count.
     $pirates = bc_api_example_get_pirates_data();
-    $this->assertEqual($data->resultTotal, count($pirates), "Check count", "Pirates");
+    $this->assertEquals($data->resultTotal, count($pirates), "Check count", "Pirates");
 
     // Check that we have cms_title key in response data.
     $this->assertTrue(isset($data->data[0]->cms_title), "Check cms_title", "Pirates");

@@ -13,7 +13,7 @@ use Drupal\taxonomy\Entity\Term;
  */
 function bc_api_example_install() {
 
-  module_load_include('inc', 'bc_api_example', 'bc_api_example.data');
+  Drupal::moduleHandler()->loadInclude('bc_api_example', 'inc', 'bc_api_example.data');
 
   // Nationalities.
   $nationalities = bc_api_example_get_nationalities_data();
@@ -82,6 +82,7 @@ function bc_api_example_uninstall() {
   $storage_handler_taxonomy_term = \Drupal::entityTypeManager()->getStorage("taxonomy_term");
   $result = \Drupal::entityQuery('taxonomy_term')
       ->condition('vid', 'nationalities')
+      ->accessCheck(FALSE)
       ->execute();
   $terms = $storage_handler_taxonomy_term->loadMultiple($result);
   $storage_handler_taxonomy_term->delete($terms);
@@ -91,6 +92,7 @@ function bc_api_example_uninstall() {
   $storage_handler_node = \Drupal::entityTypeManager()->getStorage("node");
   $result = \Drupal::entityQuery('node')
       ->condition('type', ['ship', 'pirate'], 'IN')
+      ->accessCheck(FALSE)
       ->execute();
   $nodes = $storage_handler_node->loadMultiple($result);
   $storage_handler_node->delete($nodes);

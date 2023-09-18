@@ -2,15 +2,26 @@
 
 namespace Drupal\bc_api_base;
 
+use Drupal\Core\File\FileUrlGenerator;
+
 /**
  * Provide methods to expose image based data for an API.
  */
 class AssetApiServiceBase {
 
   /**
+   * File url generator object.
+   *
+   * @var \Drupal\Core\File\FileUrlGenerator
+   */
+  protected $fileUrlGenerator;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct() {}
+  public function __construct(FileUrlGenerator $file_url_generator) {
+    $this->fileUrlGenerator = $file_url_generator;
+  }
 
   /**
    * Get basic information from a file.
@@ -31,7 +42,8 @@ class AssetApiServiceBase {
   public function getRelativePath(string $path) {
     $replaced_relative_path = '';
     if ($path !== '') {
-      $relative_path = urldecode(file_url_transform_relative($path));
+      $transformed = $this->fileUrlGenerator->transformRelative($file_url);
+      $relative_path = urldecode($transformed);
       // TODO: replace with actual public files path.
       $replaced_relative_path = str_replace('/sites/default/files/', '', $relative_path);
     }
