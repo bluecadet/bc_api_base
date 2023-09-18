@@ -156,6 +156,11 @@ jobs:
           echo "MODULE_FOLDER=$DRUPAL_ROOT/modules/bluecadet/$DRUPAL_MODULE_NAME" \
             >> $GITHUB_ENV
 
+      - name: Debug
+        run: |
+          pwd
+          ls -sla
+
       # Clone Drupal core into $DRUPAL_ROOT folder.
       # Core version can be set by changing $DRUPAL_CORE_VERSION.
       - name: Clone drupal
