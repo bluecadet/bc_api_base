@@ -157,6 +157,7 @@ jobs:
             >> $GITHUB_ENV
 
       - name: Debug
+        continue-on-error: true
         run: |
           pwd
           ls -sla
@@ -190,8 +191,10 @@ jobs:
           composer config --json --merge extra.installer-paths '{"modules/bluecadet/{$name}": ["type:custom-drupal-module"]}'
           composer require mglaman/drupal-check --dev
           composer require bluecadet/$DRUPAL_MODULE_NAME
+          composer config repositories
 
       - name: Debug
+        continue-on-error: true
         run: |
           pwd
           ls -sla
@@ -203,6 +206,7 @@ jobs:
           fetch-depth: 1
 
       - name: Debug
+        continue-on-error: true
         run: |
           pwd
           ls -sla
@@ -281,6 +285,7 @@ jobs:
       #       --url $SIMPLETEST_BASE_URL $DRUPAL_MODULE_NAME
 
       - name: Debug
+        continue-on-error: true
         run: |
           pwd
           ls -sla
