@@ -190,7 +190,7 @@ jobs:
           composer config --json extra.installer-types '["custom-drupal-module"]'
           composer config --json --merge extra.installer-paths '{"modules/bluecadet/{$name}": ["type:custom-drupal-module"]}'
           composer require mglaman/drupal-check --dev
-          composer require bluecadet/$DRUPAL_MODULE_NAME
+          composer require bluecadet/$DRUPAL_MODULE_NAME --prefer-source
           composer config repositories
 
       - name: Debug
