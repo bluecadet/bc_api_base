@@ -1,6 +1,7 @@
 
 let drupal_modules = [
   "./",
+  "./modules/bc_api_docs",
 ];
 
 let css_config = [];
