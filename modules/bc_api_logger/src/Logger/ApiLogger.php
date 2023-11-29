@@ -62,7 +62,7 @@ class ApiLogger implements LoggerInterface {
   /**
    * {@inheritdoc}
    */
-  public function log($level, $message, array $context = []) {
+  public function log($level, string|\Stringable $message, array $context = []): void {
 
     if (in_array($context['channel'], $this->capturedChannels) || preg_match('/^bc_api[_a-z0-9]*/', $context['channel']) != 0) {
       // Remove any backtraces since they may contain an unserializable vars.
