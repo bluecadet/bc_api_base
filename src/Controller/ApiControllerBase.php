@@ -228,6 +228,13 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
   protected $queryValidation;
 
   /**
+   * The return data.
+   *
+   * @var array
+   */
+  protected $return_data;
+
+  /**
    * Class constructor.
    */
   public function __construct(
