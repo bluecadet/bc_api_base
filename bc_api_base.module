@@ -18,7 +18,7 @@ function bc_api_base_update_status_alter(&$projects) {
   $filtered_projects = [];
 
   foreach ($modules as $user => $user_data) {
-    $filtered_projects += array_filter($projects, function($v) use ($user_data) {
+    $filtered_projects += array_filter($projects, function ($v) use ($user_data) {
         return in_array($v, $user_data);
     }, ARRAY_FILTER_USE_KEY);
   }

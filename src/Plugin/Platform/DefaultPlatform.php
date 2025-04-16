@@ -3,7 +3,10 @@
 namespace Drupal\bc_api_base\Plugin\Platform;
 
 /**
- * Class DefaultPlatform.
+ * Provides the DefaultPlatform class.
+ *
+ * This class serves as the default implementation for platform-related
+ * functionality within the bc_api_base module.
  *
  * @Platform(
  *    id = "default",
