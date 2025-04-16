@@ -12,6 +12,6 @@ configure: null
 
 
 # Information added by packaging script on 2025-04-16
-version: 3.0.0
+version: 3.1.0-alpha1
 project: bc_api_base
-datestamp: 1744811650305
+datestamp: 1744812668652
