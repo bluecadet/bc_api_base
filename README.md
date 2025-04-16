@@ -13,12 +13,14 @@ If you have a full instal and after enabling the simpletest module: (Login seems
 
 ### 8.x-3.0.0
 
-- Added Drupal 10 Compatability
+- Added Drupal 10 Compatibility
 - Code Style changes
+- Marking API Docs module as (Experimental)
 
 ### 8.x-2.0.2
 
 - Fixed Deprecated drupal_set_message() func
+
 ### 8.x-2.0.1
 
 - Update readme

@@ -140,6 +140,5 @@ function _get_sample_api_call_code(&$vars, $route) {
   }
 
   // POSTs.
-
   return $sample;
 }

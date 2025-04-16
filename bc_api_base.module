@@ -6,7 +6,6 @@
  */
 
 use Bluecadet\DrupalPackageManager\Checker;
-use Drupal\update\UpdateManagerInterface;
 
 /**
  * Implements hook_update_status_alter().

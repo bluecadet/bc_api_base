@@ -1,4 +1,4 @@
-name: "Bluecadet API Documentation"
+name: "Bluecadet API Documentation (Experimental)"
 type: module
 description: Add documentation functionality for API.
 core_version_requirement: ^9 || ^10
