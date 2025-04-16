@@ -84,14 +84,29 @@ jobs:
       matrix:
         drupal-core: ['10.4.x', '11.0.x', '11.1.x']
         php-version: ['8.2', '8.3']
-        mariadb-version: ['10.4', '10.5', '10.6']
+        mariadb-version: ['10.4', '10.5', '10.6', '10.7']
         exclude:
+          -
+            drupal-core: '10.4.x'
+            mariadb-version: '10.7'
           -
             drupal-core: '11.0.x'
             php-version: '8.2'
           -
             drupal-core: '11.1.x'
             php-version: '8.2'
+          -
+            drupal-core: '11.0.x'
+            mariadb-version: '10.4'
+          -
+            drupal-core: '11.1.x'
+            mariadb-version: '10.4'
+          -
+            drupal-core: '11.0.x'
+            mariadb-version: '10.5'
+          -
+            drupal-core: '11.1.x'
+            mariadb-version: '10.5'
 
     container:
       # See https://github.com/tuutti/docker-images/tree/main/drupal/ci
