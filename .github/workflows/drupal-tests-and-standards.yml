@@ -84,7 +84,14 @@ jobs:
       matrix:
         drupal-core: ['10.4.x', '11.0.x', '11.1.x']
         php-version: ['8.2', '8.3']
-        mariadb-version: ['10.4', '10.6']
+        mariadb-version: ['10.4', '10.5', '10.6']
+        exclude:
+          -
+            drupal-core: '11.0.x'
+            php-versions: '8.2'
+          -
+            drupal-core: '11.1.x'
+            php-versions: '8.2'
 
     container:
       # See https://github.com/tuutti/docker-images/tree/main/drupal/ci
@@ -169,7 +176,7 @@ jobs:
       # Drush is installed.
       - name: Install drush
         working-directory: ${{ env.DRUPAL_ROOT }}
-        run: composer require "drush/drush ^11.0 || ^12"
+        run: composer require "drush/drush ^11.0 || ^12.0 " -W
 
       - name: Install PHPCS
         working-directory: ${{ env.DRUPAL_ROOT }}
