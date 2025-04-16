@@ -259,4 +259,4 @@ jobs:
         working-directory: ${{ env.DRUPAL_ROOT }}
         continue-on-error: true
         run: |
-          vendor/bin/phpunit --bootstrap $DRUPAL_ROOT/core/tests/bootstrap.php -c $MODULE_FOLDER/phpunit.xml $MODULE_FOLDER
+          vendor/bin/phpunit --bootstrap $DRUPAL_ROOT/core/tests/bootstrap.php -c $MODULE_FOLDER/phpunit.xml $MODULE_FOLDER/.
