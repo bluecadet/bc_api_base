@@ -2,7 +2,7 @@
 
 namespace Drupal\bc_api_base;
 
-use Drupal\Core\File\FileUrlGenerator;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 
 /**
  * Provide methods to expose image based data for an API.
@@ -12,14 +12,14 @@ class AssetApiServiceBase {
   /**
    * File url generator object.
    *
-   * @var \Drupal\Core\File\FileUrlGenerator
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
    */
   protected $fileUrlGenerator;
 
   /**
    * {@inheritdoc}
    */
-  public function __construct(FileUrlGenerator $file_url_generator) {
+  public function __construct(FileUrlGeneratorInterface $file_url_generator) {
     $this->fileUrlGenerator = $file_url_generator;
   }
 
