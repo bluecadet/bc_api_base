@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/bluecadet/bc_api_base#readme",
   "dependencies": {
-    "@bluecadet/drops": "1.0.0-alpha.5"
+    "@bluecadet/drops": "^1.0.1"
   },
   "devDependencies": {
     "concurrently": "^7.6.0",
