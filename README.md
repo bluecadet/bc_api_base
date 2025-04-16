@@ -9,11 +9,16 @@ If you have a full instal and after enabling the simpletest module: (Login seems
 
 ## Changelog
 
-- Working on D10 compatibility
+- Working on D11 compatibility
+
+### 8.x-3.1.x
+
+- Drupal 11 compatibility
+- Removing Drupal 9 compatibility
 
 ### 8.x-3.0.0
 
-- Added Drupal 10 Compatibility
+- Added Drupal 10 compatibility
 - Code Style changes
 - Marking API Docs module as (Experimental)
 
