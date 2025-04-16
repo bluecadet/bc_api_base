@@ -88,10 +88,10 @@ jobs:
         exclude:
           -
             drupal-core: '11.0.x'
-            php-versions: '8.2'
+            php-version: '8.2'
           -
             drupal-core: '11.1.x'
-            php-versions: '8.2'
+            php-version: '8.2'
 
     container:
       # See https://github.com/tuutti/docker-images/tree/main/drupal/ci
