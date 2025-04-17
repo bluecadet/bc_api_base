@@ -42,7 +42,7 @@ class AssetApiServiceBase {
   public function getRelativePath(string $path) {
     $replaced_relative_path = '';
     if ($path !== '') {
-      $transformed = $this->fileUrlGenerator->transformRelative($file_url);
+      $transformed = $this->fileUrlGenerator->transformRelative($path);
       $relative_path = urldecode($transformed);
       // TODO: replace with actual public files path.
       $replaced_relative_path = str_replace('/sites/default/files/', '', $relative_path);

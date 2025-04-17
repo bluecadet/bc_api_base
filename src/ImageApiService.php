@@ -64,10 +64,12 @@ class ImageApiService extends AssetApiServiceBase {
       if ($crop) {
         $anchor = $this->focalPointManager->absoluteToRelative($crop->x->value, $crop->y->value, $image_file->getWidth(), $image_file->getHeight());
       }
+      $uri = $file->getFileUri();
+      $url = $this->fileUrlGenerator->generateAbsoluteString($uri);
       $data = [
-        'uri' => $file->getFileUri(),
-        'url' => $file->url(),
-        'relativePath' => $this->getRelativePath($file->url()),
+        'uri' => $uri,
+        'url' => $url,
+        'relativePath' => $this->getRelativePath($url),
         'origSize' => [
           'width' => $image_file->getWidth(),
           'height' => $image_file->getHeight(),
@@ -78,6 +80,7 @@ class ImageApiService extends AssetApiServiceBase {
       foreach ($image_styles as $style_name) {
         $style = ImageStyle::load($style_name);
 
+        // todo: check style exists
         $url = $style->buildUrl($file->getFileUri());
 
         // Remove an h query param.
