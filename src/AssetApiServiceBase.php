@@ -27,10 +27,14 @@ class AssetApiServiceBase {
    * Get basic information from a file.
    */
   public function getFileData($file) {
+
+    $uri = $file->getFileUri();
+    $url = $this->fileUrlGenerator->generateAbsoluteString($uri);
+
     $data = [
-      'uri' => $file->getFileUri(),
-      'url' => $file->url(),
-      'relativePath' => $this->getRelativePath($file->url()),
+      'uri' => $uri,
+      'url' => $url,
+      'relativePath' => $this->getRelativePath($url),
     ];
 
     return $data;
