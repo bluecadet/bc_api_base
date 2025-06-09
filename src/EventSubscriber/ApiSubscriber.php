@@ -28,7 +28,7 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
   /**
    * Drupal State obj.
    *
-   * @var Drupal\Core\State\State
+   * @var \Drupal\Core\State\State
    */
   private $drupalState = [];
 

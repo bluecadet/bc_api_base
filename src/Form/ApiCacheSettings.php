@@ -17,21 +17,21 @@ class ApiCacheSettings extends FormBase {
   /**
    * Database Connection.
    *
-   * @var Drupal\Core\Database\Connection
+   * @var \Drupal\Core\Database\Connection
    */
   private $database;
 
   /**
    * Drupal State obj.
    *
-   * @var Drupal\Core\State\State
+   * @var \Drupal\Core\State\State
    */
   private $drupalState = [];
 
   /**
    * Entity Query.
    *
-   * @var Drupal\Core\Routing\RouteProvider
+   * @var \Drupal\Core\Routing\RouteProvider
    */
   protected $routeProvider;
 

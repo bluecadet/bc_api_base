@@ -209,21 +209,21 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
   /**
    * Entity Type Manager.
    *
-   * @var Drupal\Core\Entity\EntityTypeManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityTypeManager;
 
   /**
    * Drupal State obj.
    *
-   * @var Drupal\Core\State\State
+   * @var \Drupal\Core\State\State
    */
   private $drupalState = [];
 
   /**
    * Drupal State obj.
    *
-   * @var Drupal\bc_api_base\ApiParameterValidation
+   * @var \Drupal\bc_api_base\ApiParameterValidation
    */
   protected $queryValidation;
 

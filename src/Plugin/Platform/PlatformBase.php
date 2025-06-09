@@ -16,7 +16,7 @@ class PlatformBase extends PluginBase implements PlatformInterface, PlatformTran
   /**
    * Entity Manager.
    *
-   * @var Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityManager
    */
   protected $entityManager;
 

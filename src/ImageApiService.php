@@ -16,21 +16,21 @@ class ImageApiService extends AssetApiServiceBase {
   /**
    * Image Factory.
    *
-   * @var Drupal\Core\Image\ImageFactory
+   * @var \Drupal\Core\Image\ImageFactory
    */
   protected $imageFactory;
 
   /**
    * Config Factory.
    *
-   * @var Drupal\Core\Config\ConfigFactoryInterface
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
 
   /**
    * Image Factory.
    *
-   * @var Drupal\focal_point\FocalPointManager|null
+   * @var \Drupal\focal_point\FocalPointManager|null
    */
   protected $focalPointManager;
 

@@ -24,7 +24,7 @@ interface ApiControllerInterface {
   public function setPlatform();
 
   /**
-   * Will validate and set query paramaters based on annotations.
+   * Will validate and set query parameters based on annotations.
    */
   public function autoParams();
 
@@ -55,10 +55,10 @@ interface ApiControllerInterface {
   /**
    * Get Api Resource.
    *
-   * @param Symfony\Component\HttpFoundation\Request $request
+   * @param \Symfony\Component\HttpFoundation\Request $request
    *   Actual request.
    *
-   * @return Symfony\Component\HttpFoundation\HttpResponse
+   * @return \Symfony\Component\HttpFoundation\HttpResponse
    *   An HTTP response.
    */
   public function getResource(Request $request);
@@ -66,10 +66,10 @@ interface ApiControllerInterface {
   /**
    * Get Api Resource List.
    *
-   * @param Symfony\Component\HttpFoundation\Request $request
+   * @param \Symfony\Component\HttpFoundation\Request $request
    *   Actual request.
    *
-   * @return Symfony\Component\HttpFoundation\HttpResponse
+   * @return \Symfony\Component\HttpFoundation\HttpResponse
    *   An HTTP response.
    */
   public function getResourceList(Request $request);

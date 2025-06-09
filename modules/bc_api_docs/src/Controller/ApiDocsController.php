@@ -20,14 +20,14 @@ class ApiDocsController extends ControllerBase {
   /**
    * Database Connection.
    *
-   * @var Drupal\Core\Database\Connection
+   * @var \Drupal\Core\Database\Connection
    */
   private $database;
 
   /**
    * Entity Query.
    *
-   * @var Drupal\Core\Routing\RouteProvider
+   * @var \Drupal\Core\Routing\RouteProvider
    */
   protected $routeProvider;
 
