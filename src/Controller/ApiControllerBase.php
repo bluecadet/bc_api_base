@@ -464,9 +464,8 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
       return [];
     }
 
-    $response = new JsonResponse($this->return_data);
-    // Alter it.
-    $this->responseAlter($response);
+    // $response = new JsonResponse($this->return_data);
+    $response = $this->createResponse();
 
     return $response;
   }
@@ -533,9 +532,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
       return [];
     }
 
-    $response = new JsonResponse($this->return_data);
-    // Alter it.
-    $this->responseAlter($response);
+    $response = $this->createResponse();
 
     return $response;
   }
@@ -587,6 +584,19 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
   public function buildLinks() {
     $this->prev = "";
     $this->next = "";
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createResponse(): Response {
+    $response = new JsonResponse($this->return_data);
+    $response->setStatusCode($this->return_data['status']);
+
+    // Allow subclasses to alter it.
+    $this->responseAlter($response);
+
+    return $response;
   }
 
   /**

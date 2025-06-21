@@ -75,7 +75,22 @@ interface ApiControllerInterface {
   public function getResourceList(Request $request);
 
   /**
+   * Create the response object.
+   *
+   * We allow subclasses to override this method if they need to create
+   * different types of responses, however, they can also alter the response
+   * later, if they only need minor changes.
+   *
+   * @return Symfony\Component\HttpFoundation\Response
+   *   The response object.
+   */
+  public function createResponse(): Response;
+
+  /**
    * Alter the response object before executing.
+   *
+   * @param \Symfony\Component\HttpFoundation\Response $response
+   *   The response object to alter.
    */
   public function responseAlter(Response $response);
 
