@@ -93,6 +93,7 @@ class ApiControllerPirateExample extends ApiControllerBase {
   public function getResourceListQueryResult() {
     // This method should be overridden for any endpoint.
     $query = $this->entityTypeManager->getStorage('node')->getQuery();
+    $query->accessCheck(TRUE);
     $query->condition('status', $this->privateParams['status']);
     $query->condition('type', 'pirate');
 

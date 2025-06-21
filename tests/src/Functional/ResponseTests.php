@@ -30,7 +30,7 @@ class ResponseTests extends BrowserTestBase {
    */
   protected $keyAuthConfig;
 
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stable9';
 
   protected $dumpHeaders = TRUE;
 
@@ -55,7 +55,7 @@ class ResponseTests extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->keyAuth = $this->container->get('key_auth');

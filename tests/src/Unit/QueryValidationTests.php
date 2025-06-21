@@ -20,7 +20,7 @@ class QueryValidationTests extends UnitTestCase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  protected function setUp(): void {
     // Nothing to do here.
     parent::setUp();
   }
