@@ -20,3 +20,26 @@ bc_api_example.pirates_detail:
     parameters:
       nid:
         type: entity:node
+
+bc_api_example.cacheable.pirates:
+  path: '/api/cacheable/pirates'
+  methods: [GET, HEAD]
+  defaults:
+    _controller: '\Drupal\bc_api_example\Controller\ApiControllerCacheableResponsePirateExample:getResourceList'
+  requirements:
+    _permission: 'use api'
+  options:
+    _auth: [ 'key_auth' ]
+
+bc_api_example.cacheable.pirates_detail:
+  path: '/api/cacheable/pirates/{nid}'
+  methods: [GET, HEAD]
+  defaults:
+    _controller: '\Drupal\bc_api_example\Controller\ApiControllerCacheableResponsePirateExample:getResource'
+  requirements:
+    _permission: 'use api'
+  options:
+    _auth: [ 'key_auth' ]
+    parameters:
+      nid:
+        type: entity:node
