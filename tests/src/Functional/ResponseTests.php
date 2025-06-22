@@ -148,7 +148,7 @@ class ResponseTests extends BrowserTestBase {
     $this->drupalLogin($user);
 
     // Call the endpoint with the API key as a query param.
-    $this->drupalGet('api/cachable/pirates', [
+    $this->drupalGet('api/cacheable/pirates', [
       'query' => [
         'api-key' => $user->api_key->value,
       ],
