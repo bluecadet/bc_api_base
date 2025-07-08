@@ -60,6 +60,18 @@ trait CacheableJsonResponseTrait {
 
   /**
    * {@inheritdoc}
+   */
+  public function getResourceQueryResult() {
+    parent::getResourceQueryResult();
+
+    // If the resource is set, add it as a cacheable dependency.
+    if (isset($this->resource) && !empty($this->resource)) {
+      $this->addCacheableDependency($this->resource);
+    }
+  }
+
+  /**
+   * {@inheritdoc}
    *
    * Override the base classes response, to create a cacheable response.
    */

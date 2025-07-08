@@ -89,10 +89,6 @@ class ApiControllerCacheableResponsePirateExample extends ApiControllerBase {
     // Just having this here as an example.
     // Most times no need to override this method.
     parent::getResourceQueryResult();
-
-    if (isset($this->resource) && !empty($this->resource)) {
-      $this->addCacheableDependency($this->resource);
-    }
   }
 
   /**
