@@ -3,6 +3,7 @@
 namespace Drupal\bc_api_example\Controller;
 
 use Drupal\bc_api_base\Controller\ApiControllerBase;
+use Drupal\bc_api_base\CacheableJsonResponseTrait;
 
 /**
  * Example API Controller Class.
@@ -23,7 +24,9 @@ use Drupal\bc_api_base\Controller\ApiControllerBase;
  *   }
  * )
  */
-class ApiControllerPirateExample extends ApiControllerBase {
+class ApiControllerCacheableResponsePirateExample extends ApiControllerBase {
+
+  use CacheableJsonResponseTrait;
 
   /**
    * {@inheritdoc}
@@ -39,7 +42,7 @@ class ApiControllerPirateExample extends ApiControllerBase {
    */
   public function getCacheId() {
     // This should be a unique string, characters only.
-    $cid = "pirates";
+    $cid = "yo-ho-ho";
 
     if (!empty($this->params)) {
       $cid .= ":" . implode(":", $this->params);
@@ -120,6 +123,7 @@ class ApiControllerPirateExample extends ApiControllerBase {
 
     foreach ($this->rawData as $node) {
       $this->cacheTags = array_merge($this->cacheTags, $node->getCacheTags());
+      $this->addCacheableDependency($node);
       $created_changed = $this->transformer->createdChangedFieldVals($node);
 
       $item = [

@@ -30,7 +30,7 @@ class ResponseTests extends BrowserTestBase {
    */
   protected $keyAuthConfig;
 
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stable9';
 
   protected $dumpHeaders = TRUE;
 
@@ -55,7 +55,7 @@ class ResponseTests extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  protected function setUp() {
+  protected function setUp(): void {
     parent::setUp();
 
     $this->keyAuth = $this->container->get('key_auth');
@@ -88,7 +88,7 @@ class ResponseTests extends BrowserTestBase {
     $user = $this->drupalCreateUser(['use api', 'use key authentication']);
 
     // Log in.
-    $this->drupalLogin($user);
+    // $this->drupalLogin($user);
 
     // Call with Query param.
     $this->drupalGet('api/pirates', [
@@ -112,7 +112,7 @@ class ResponseTests extends BrowserTestBase {
     $user = $this->drupalCreateUser(['use key authentication', 'use api']);
 
     // Log in.
-    $this->drupalLogin($user);
+    // $this->drupalLogin($user);
 
     // Call with Query param.
     $data = $this->drupalGet('api/pirates', [
@@ -128,7 +128,7 @@ class ResponseTests extends BrowserTestBase {
     $this->drupalGet('api/pirates', [], ['api-key' => $user->api_key->value]);
     $this->assertSession()->statusCodeEquals(200);
 
-    Drupal::moduleHandler()->loadInclude('bc_api_example', 'inc', 'bc_api_example.data');
+    \Drupal::moduleHandler()->loadInclude('bc_api_example', 'inc', 'bc_api_example.data');
 
     // Check we have a proper result count.
     $pirates = bc_api_example_get_pirates_data();
@@ -137,6 +137,44 @@ class ResponseTests extends BrowserTestBase {
     // Check that we have cms_title key in response data.
     $this->assertTrue(isset($data->data[0]->cms_title), "Check cms_title", "Pirates");
 
+  }
+
+  /**
+   * Test the cacheable pirates API endpoint.
+   */
+  public function testCacheablePiratesApiResponse() {
+    // Create API user.
+    $user = $this->drupalCreateUser(['use api', 'use key authentication']);
+    $this->drupalLogin($user);
+
+    // Call the endpoint with the API key as a query param.
+    $this->drupalGet('api/cacheable/pirates', [
+      'query' => [
+        'api-key' => $user->api_key->value,
+      ],
+    ]);
+    $this->assertSession()->statusCodeEquals(200);
+
+    // Check for JSON content type header.
+    $headers = $this->getSession()->getResponseHeaders();
+
+    $this->assertArrayHasKey('Content-Type', $headers);
+    $this->assertStringContainsString('application/json', $headers['Content-Type'][0]);
+
+    // Check for cache headers.
+    $this->assertArrayHasKey('X-Drupal-Cache-Tags', $headers, 'Cache tags header is present');
+    $this->assertArrayHasKey('Cache-Control', $headers, 'Cache-Control header is present');
+
+    // Check the response body.
+    $data = json_decode($this->getSession()->getPage()->getContent(), TRUE);
+    $this->assertIsArray($data['data']);
+    $this->assertArrayHasKey('resultTotal', $data);
+    $this->assertArrayHasKey('data', $data);
+
+    // Check that at least one pirate has a cms_title.
+    if (!empty($data['data'])) {
+      $this->assertArrayHasKey('cms_title', $data['data'][0]);
+    }
   }
 
 }

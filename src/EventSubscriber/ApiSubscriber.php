@@ -138,9 +138,10 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
   public function on400(RequestEvent $event) {
 
     $request = $event->getRequest();
+    $path = $request->getPathInfo();
     $exception = $event->getThrowable();
 
-    if (strpos($request->getRequestUri(), "/api/") === 0 || $request->getRequestUri() == "/api") {
+    if (strpos($request->getRequestUri(), "/api/") === 0 || $path == "/api") {
       $data = [
         'status' => (int) $exception->getStatusCode(),
         'error_msg' => 'Bad Request',
@@ -163,9 +164,10 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
   public function on403(RequestEvent $event) {
 
     $request = $event->getRequest();
+    $path = $request->getPathInfo();
     $exception = $event->getThrowable();
 
-    if (strpos($request->getRequestUri(), "/api/") === 0 || $request->getRequestUri() == "/api") {
+    if (strpos($request->getRequestUri(), "/api/") === 0 || $path == "/api") {
 
       $data = [
         'status' => (int) $exception->getStatusCode(),
@@ -189,9 +191,10 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
   public function on404(RequestEvent $event) {
 
     $request = $event->getRequest();
+    $path = $request->getPathInfo();
     $exception = $event->getThrowable();
 
-    if (strpos($request->getRequestUri(), "/api/") === 0 || $request->getRequestUri() == "/api") {
+    if (strpos($request->getRequestUri(), "/api/") === 0 || $path == "/api") {
       $data = [
         'status' => (int) $exception->getStatusCode(),
         'error_msg' => 'Not Found',
@@ -201,7 +204,7 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
       $event->setResponse($response);
 
       // Log this call.
-      $this->loggerFactory->get('bc_api')->error("403: Bad Api call. " . $exception->getMessage(), ["request" => $request, "exception" => $exception]);
+      $this->loggerFactory->get('bc_api')->error("404: Bad Api call. " . $exception->getMessage(), ["request" => $request, "exception" => $exception]);
     }
 
   }
