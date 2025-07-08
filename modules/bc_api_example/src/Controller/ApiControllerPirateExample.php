@@ -38,7 +38,8 @@ class ApiControllerPirateExample extends ApiControllerBase {
    * {@inheritdoc}
    */
   public function getCacheId() {
-    $cid = "SOMETHING_UNIQUE";
+    // This should be a unique string, characters only.
+    $cid = "pirates";
 
     if (!empty($this->params)) {
       $cid .= ":" . implode(":", $this->params);
