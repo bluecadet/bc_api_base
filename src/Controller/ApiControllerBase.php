@@ -174,14 +174,14 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
   /**
    * Limit the number of results.
    *
-   * @var int
+   * @var string
    */
   protected $prev = "";
 
   /**
    * Limit the number of results.
    *
-   * @var int
+   * @var string
    */
   protected $next = "";
 
