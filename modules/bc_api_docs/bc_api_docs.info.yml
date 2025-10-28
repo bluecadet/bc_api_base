@@ -11,7 +11,7 @@ dependencies:
 configure: null
 
 
-# Information added by packaging script on 2025-06-09
-version: 3.1.0-rc2
+# Information added by packaging script on 2025-10-28
+version: 3.1.0-rc3
 project: bc_api_base
-datestamp: 1749487229711
+datestamp: 1761657454259
