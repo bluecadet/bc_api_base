@@ -350,8 +350,15 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
 
     // Called class params.
     $class = get_class($this);
+    $annotations = [];
     $reflectionClass = new \ReflectionClass($class);
-    $annotations = $reader->getClassAnnotations($reflectionClass);
+    while ($reflectionClass) {
+      $annotations = array_merge(
+        $reader->getClassAnnotations($reflectionClass),
+        $annotations
+      );
+      $reflectionClass = $reflectionClass->getParentClass();
+    }
 
     // Default params.
     $empty_query_bag = new ParameterBag([]);
