@@ -27,7 +27,8 @@ class ApiParameterValidation {
           }
 
           // Grab raw value.
-          $raw_value = $query_bag->get($param->name);
+          $all = $query_bag->all();
+          $raw_value = $all[$param->name] ?? NULL;
 
           // Setting default if param is empty and default exists.
           if (is_null($raw_value) && $param->default) {
@@ -36,6 +37,11 @@ class ApiParameterValidation {
 
           switch ($param->type) {
             case "string":
+
+              $params[$param->name] = $raw_value;
+              break;
+
+            case "string[]":
 
               $params[$param->name] = $raw_value;
               break;
@@ -101,7 +107,7 @@ class ApiParameterValidation {
                     ];
                   }
 
-                  $new_data[] = $item_test;
+                  $new_data[$key] = $item_test;
                 }
 
                 $params[$param->name] = $new_data;
@@ -148,6 +154,28 @@ class ApiParameterValidation {
                 $params[$param->name] = $raw_value;
               }
 
+              break;
+
+            case "enum[]":
+              if ($query_bag->has($param->name) || $param->default) {
+                if (!is_array($raw_value)) {
+                  // Try to Parse value, comma seperated.
+                  $raw_value = explode(",", $raw_value);
+                }
+
+                $new_data = [];
+                foreach ($raw_value as $key => $item_raw) {
+                  if (!in_array($item_raw, $param->values)) {
+                    $errors[] = [
+                      'param' => $param->name,
+                      'error_msg' => "Parameter '" . $param->name . "[$key]' must be in list. [" . implode(", ", $param->values) . "].",
+                    ];
+                  }
+
+                }
+
+                $params[$param->name] = $raw_value;
+              }
               break;
           }
         }
