@@ -53,7 +53,13 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  *     @ApiParam(
  *       name = "debug",
  *       type = "bool",
- *       description = "This is a description.",
+ *       description = "Enable debug mode.",
+ *       default = "FALSE",
+ *     ),
+ *     @ApiParam(
+ *       name = "trace",
+ *       type = "bool",
+ *       description = "Synonym for debug.",
  *       default = "FALSE",
  *     ),
  *   },
@@ -331,8 +337,14 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
       $this->resource = $parameters['taxonomy_term'];
     }
 
-    // Add in debugging.
-    $this->privateParams['debug'] = filter_var($this->request->get('debug'), FILTER_VALIDATE_BOOLEAN);
+    // Add in debugging. Trace param will take precedence over debug. Debug may
+    // be removed in the future.
+    if ($this->request->get('trace') !== NULL) {
+      $this->privateParams['debug'] = filter_var($this->request->get('trace'), FILTER_VALIDATE_BOOLEAN);
+    }
+    else {
+      $this->privateParams['debug'] = filter_var($this->request->get('debug'), FILTER_VALIDATE_BOOLEAN);
+    }
   }
 
   /**

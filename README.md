@@ -15,6 +15,7 @@ If you have a full instal and after enabling the simpletest module: (Login seems
 
 - Drupal 11 compatibility
 - Removing Drupal 9 compatibility
+- Add `trace` param. Synonym of `debug`, but `debug` can cause errors on certain environments.
 
 ### 8.x-3.0.0
 
