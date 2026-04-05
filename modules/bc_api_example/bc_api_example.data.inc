@@ -50,6 +50,10 @@ function bc_api_example_get_nationalities_data() {
       'label' => 'France',
       'tid' => NULL,
     ],
+    'ireland' => [
+      'label' => 'Ireland',
+      'tid' => NULL,
+    ],
   ];
 }
 
@@ -103,7 +107,7 @@ function bc_api_example_get_ships_data() {
       'nid' => NULL,
     ],
     'pirate_queen' => [
-      'title' => 'pirate_queen',
+      'title' => 'Pirate Queen',
       'nid' => NULL,
     ],
     'blessed_william' => [
@@ -172,7 +176,7 @@ function bc_api_example_get_pirates_data() {
       'nationality' => ['ireland'],
       'ships' => ['revenge'],
     ],
-    'zheng yi sao' => [
+    'zheng_yi_sao' => [
       'nid' => NULL,
       'status' => 1,
       'title' => 'Zheng Yi Sao',
@@ -234,51 +238,6 @@ function bc_api_example_get_pirates_data() {
       'body' => "",
       'nationality' => ['ireland'],
       'ships' => ['pirate_queen'],
-    ],
-    '' => [
-      'nid' => NULL,
-      'status' => 1,
-      'title' => '',
-      'nickname' => ["", ""],
-      'body' => "",
-      'nationality' => [''],
-      'ships' => [''],
-    ],
-    '' => [
-      'nid' => NULL,
-      'status' => 1,
-      'title' => '',
-      'nickname' => ["", ""],
-      'body' => "",
-      'nationality' => [''],
-      'ships' => [''],
-    ],
-    '' => [
-      'nid' => NULL,
-      'status' => 1,
-      'title' => '',
-      'nickname' => ["", ""],
-      'body' => "",
-      'nationality' => [''],
-      'ships' => [''],
-    ],
-    '' => [
-      'nid' => NULL,
-      'status' => 1,
-      'title' => '',
-      'nickname' => ["", ""],
-      'body' => "",
-      'nationality' => [''],
-      'ships' => [''],
-    ],
-    '' => [
-      'nid' => NULL,
-      'status' => 1,
-      'title' => '',
-      'nickname' => ["", ""],
-      'body' => "",
-      'nationality' => [''],
-      'ships' => [''],
     ],
   ];
 }
