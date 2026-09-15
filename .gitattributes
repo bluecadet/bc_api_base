@@ -15,3 +15,10 @@ package-lock.json       export-ignore
 package.json            export-ignore
 phpunit.xml             export-ignore
 postcss.config.js       export-ignore
+
+# these composer.json stubs exist only so the CI coverage-summary action
+# breaks out each submodule as its own package row; the submodules aren't
+# standalone-installable Composer packages, so exclude them from the tarball
+modules/bc_api_docs/composer.json     export-ignore
+modules/bc_api_example/composer.json  export-ignore
+modules/bc_api_logger/composer.json   export-ignore
