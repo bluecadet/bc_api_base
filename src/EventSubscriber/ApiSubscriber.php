@@ -141,6 +141,10 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
     $path = $request->getPathInfo();
     $exception = $event->getThrowable();
 
+    if (!$exception instanceof HttpExceptionInterface) {
+      return;
+    }
+
     if (strpos($request->getRequestUri(), "/api/") === 0 || $path == "/api") {
       $data = [
         'status' => (int) $exception->getStatusCode(),
@@ -151,7 +155,10 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
       $event->setResponse($response);
 
       // Log this call.
-      $this->loggerFactory->get('bc_api')->error("400: Bad Api call. " . $exception->getMessage(), ["request" => $request, "exception" => $exception]);
+      $this->loggerFactory->get('bc_api')->error("400: Bad Api call. " . $exception->getMessage(), [
+        "request" => $request,
+        "exception" => $exception,
+      ]);
     }
   }
 
@@ -167,6 +174,10 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
     $path = $request->getPathInfo();
     $exception = $event->getThrowable();
 
+    if (!$exception instanceof HttpExceptionInterface) {
+      return;
+    }
+
     if (strpos($request->getRequestUri(), "/api/") === 0 || $path == "/api") {
 
       $data = [
@@ -178,7 +189,10 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
       $event->setResponse($response);
 
       // Log this call.
-      $this->loggerFactory->get('bc_api')->error("403: Bad Api call. " . $exception->getMessage(), ["request" => $request, "exception" => $exception]);
+      $this->loggerFactory->get('bc_api')->error("403: Bad Api call. " . $exception->getMessage(), [
+        "request" => $request,
+        "exception" => $exception,
+      ]);
     }
   }
 
@@ -194,6 +208,10 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
     $path = $request->getPathInfo();
     $exception = $event->getThrowable();
 
+    if (!$exception instanceof HttpExceptionInterface) {
+      return;
+    }
+
     if (strpos($request->getRequestUri(), "/api/") === 0 || $path == "/api") {
       $data = [
         'status' => (int) $exception->getStatusCode(),
@@ -204,7 +222,10 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
       $event->setResponse($response);
 
       // Log this call.
-      $this->loggerFactory->get('bc_api')->error("404: Bad Api call. " . $exception->getMessage(), ["request" => $request, "exception" => $exception]);
+      $this->loggerFactory->get('bc_api')->error("404: Bad Api call. " . $exception->getMessage(), [
+        "request" => $request,
+        "exception" => $exception,
+      ]);
     }
 
   }

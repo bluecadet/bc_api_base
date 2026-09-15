@@ -19,7 +19,7 @@ use Drupal\bc_api_base\CacheableJsonResponseTrait;
  *     @ApiParam(
  *       name = "nat",
  *       type = "int",
- *       description = "Filter on nationality. This should use the taxonomy id of the nationality.",
+ *       description = "Filter on nationality (taxonomy term id).",
  *     ),
  *   }
  * )
@@ -85,6 +85,7 @@ class ApiControllerCacheableResponsePirateExample extends ApiControllerBase {
   /**
    * {@inheritdoc}
    */
+  // phpcs:ignore Generic.CodeAnalysis.UselessOverridingMethod.Found
   public function getResourceQueryResult() {
     // Just having this here as an example.
     // Most times no need to override this method.

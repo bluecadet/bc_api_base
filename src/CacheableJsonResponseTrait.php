@@ -29,6 +29,7 @@ trait CacheableJsonResponseTrait {
    * will be applied when the request is altered.
    *
    * @return \Drupal\Core\Cache\CacheableMetadata
+   *   The cacheable metadata for the response.
    */
   protected function getCacheableMetadata(): CacheableMetadata {
     if (!isset($this->cacheMetadata)) {

@@ -2,8 +2,8 @@
 
 namespace Drupal\bc_api_base;
 
-use Drupal\image\Entity\ImageStyle;
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Image\ImageFactory;
 use Drupal\crop\Entity\Crop;
@@ -28,27 +28,36 @@ class ImageApiService extends AssetApiServiceBase {
   protected $configFactory;
 
   /**
-   * Image Factory.
+   * The focal_point manager service.
    *
-   * @var \Drupal\focal_point\FocalPointManager|null
+   * NULL if the optional focal_point module isn't installed.
+   *
+   * @var object|null
    */
   protected $focalPointManager;
 
   /**
+   * Entity Type Manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * {@inheritdoc}
    */
-  public function __construct(FileUrlGeneratorInterface $file_url_generator, ImageFactory $image_factory, ConfigFactoryInterface $config_factory) {
+  public function __construct(FileUrlGeneratorInterface $file_url_generator, ImageFactory $image_factory, ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager) {
     parent::__construct($file_url_generator);
 
     $this->imageFactory = $image_factory;
     $this->configFactory = $config_factory;
+    $this->entityTypeManager = $entity_type_manager;
 
     // focal_point is an optional integration -- look the service up at
     // runtime rather than injecting it, since sites without the focal_point
     // module installed have no such service to inject.
-    // phpcs:ignore
     // @phpstan-ignore-next-line
-    $this->focalPointManager = (\Drupal::hasService('focal_point.manager')) ? \Drupal::service('focal_point.manager') : NULL;
+    $this->focalPointManager = (\Drupal::hasService('focal_point.manager')) ? \Drupal::service('focal_point.manager') : NULL; // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
   }
 
   /**
@@ -69,6 +78,8 @@ class ImageApiService extends AssetApiServiceBase {
         $crop_type = $this->configFactory->get('focal_point.settings')->get('crop_type');
         $crop = Crop::findCrop($file->getFileUri(), $crop_type);
         if ($crop) {
+          // @phpstan-ignore-next-line focal_point is an optional integration;
+          // its class isn't resolvable unless the module is installed.
           $anchor = $this->focalPointManager->absoluteToRelative($crop->x->value, $crop->y->value, $image_file->getWidth(), $image_file->getHeight());
         }
       }
@@ -86,9 +97,9 @@ class ImageApiService extends AssetApiServiceBase {
       ];
 
       foreach ($image_styles as $style_name) {
-        $style = ImageStyle::load($style_name);
+        $style = $this->entityTypeManager->getStorage('image_style')->load($style_name);
 
-        // todo: check style exists
+        // @todo check style exists
         $url = $style->buildUrl($file->getFileUri());
 
         // Remove an h query param.

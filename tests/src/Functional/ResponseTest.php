@@ -14,7 +14,7 @@ use Drupal\key_auth\KeyAuth;
  * @group bc_api_base
  * @group bc_api_base:functional
  */
-class ResponseTests extends BrowserTestBase {
+class ResponseTest extends BrowserTestBase {
 
   /**
    * The key auth service.

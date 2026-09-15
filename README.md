@@ -71,7 +71,9 @@ The CI pipeline runs the following for each Drupal version:
 
 #### Current coverage
 
-Unit tests cover query parameter validation (`QueryValidationTests`) and the cacheable JSON response trait (`CacheableJsonResponseTraitTest`). A functional test (`ResponseTests`) covers API response behavior. Kernel coverage for the asset/platform services is not yet written.
+Unit tests cover query parameter validation (`QueryValidationTest`) and the cacheable JSON response trait (`CacheableJsonResponseTraitTest`). A functional test (`ResponseTest`) covers API response behavior. Kernel coverage for the asset/platform services is not yet written.
+
+Note: prior to this release, `QueryValidationTests.php` and `ResponseTests.php` used the plural "Tests" filename suffix instead of PHPUnit's default "Test" suffix, which meant PHPUnit's directory-based discovery silently never ran either file in CI. Renamed to fix this -- their tests are now actually executed.
 
 #### Manual Testing
 

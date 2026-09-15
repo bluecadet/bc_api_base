@@ -27,6 +27,9 @@ class CacheableJsonResponseTraitTest extends UnitTestCase {
         $this->return_data = $return_data;
       }
 
+      /**
+       * Sets cache tags directly for test setup.
+       */
       public function setCacheTags(array $tags) {
         $this->getCacheableMetadata()->setCacheTags($tags);
       }

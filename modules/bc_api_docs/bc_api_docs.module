@@ -7,7 +7,6 @@
 
 use Drupal\bc_api_base\Annotation\ApiBaseDoc;
 use Drupal\bc_api_base\Annotation\ApiDoc;
-use Drupal\Component\Annotation\Doctrine\SimpleAnnotationReader;
 
 /**
  * Implements hook_theme().
@@ -64,7 +63,7 @@ function template_preprocess_api_endpoint(&$vars) {
             ['data' => ["#markup" => "<code>" . $param->name . "</code>"]],
             $param->type,
             $full_description,
-            ($param->required)? $param->required : "FALSE",
+            ($param->required) ? $param->required : "FALSE",
             $param->default,
           ];
 
@@ -80,14 +79,14 @@ function template_preprocess_api_endpoint(&$vars) {
 
   // Permissions.
   if ($roles = $route->getRequirement("_role")) {
-    $vars['data']['access']['roles'] = ["#markup" => "Role(s): " . _process_route_access_str($roles)];
+    $vars['data']['access']['roles'] = ["#markup" => "Role(s): " . bc_api_docs_process_route_access_str($roles)];
   }
   if ($permissions = $route->getRequirement("_permission")) {
-    $vars['data']['access']['permissions'] = ["#markup" => "Permission(s): " . _process_route_access_str($permissions)];
+    $vars['data']['access']['permissions'] = ["#markup" => "Permission(s): " . bc_api_docs_process_route_access_str($permissions)];
   }
 
   // Get Sample Code.
-  // $sample_code = _get_sample_api_call_code($vars, $route);
+  // $sample_code = _get_sample_api_call_code($vars, $route);.
   $sample_code = "";
 
   $vars['data']['examples'] = [
@@ -98,8 +97,7 @@ function template_preprocess_api_endpoint(&$vars) {
 /**
  * Process and format route access strings for documentation.
  */
-function _process_route_access_str(string $str) {
+function bc_api_docs_process_route_access_str(string $str) {
   $str = str_replace([",", "+"], [" <b>AND</b> ", " <b>OR</b> "], $str);
   return $str;
 }
-

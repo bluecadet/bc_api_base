@@ -238,6 +238,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
    *
    * @var array
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $return_data;
 
   /**
@@ -252,7 +253,8 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
     CurrentRouteMatch $current_route,
     LoggerChannelFactoryInterface $factory,
     EntityTypeManagerInterface $entityTypeManager,
-    $drupal_state) {
+    $drupal_state,
+  ) {
 
     $this->container = $container;
     $this->assetService = $assetService;
@@ -354,7 +356,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
    */
   public function autoParams() {
 
-    // @TODO: Why aren't these autoloaded???
+    // @todo Why aren't these autoloaded???
     new ApiDoc();
     new ApiBaseDoc();
     new ApiParam();
@@ -376,10 +378,10 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
 
     // Default params.
     $empty_query_bag = new ParameterBag([]);
-    list($this->defaultParams, $no_errors) = $this->queryValidation->validateQueryParams($annotations, $empty_query_bag);
+    [$this->defaultParams] = $this->queryValidation->validateQueryParams($annotations, $empty_query_bag);
 
     // Actual Params.
-    list($params, $errors) = $this->queryValidation->validateQueryParams($annotations, $this->request->query);
+    [$params, $errors] = $this->queryValidation->validateQueryParams($annotations, $this->request->query);
     $this->params = array_merge($this->params, $params);
 
     if (!empty($errors)) {
@@ -481,6 +483,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
     }
 
     if ($this->privateParams['debug'] && function_exists("ksm")) {
+      // phpcs:ignore Drupal.Functions.DiscouragedFunctions.Discouraged
       ksm($this->return_data);
       return [];
     }
@@ -549,6 +552,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
     }
 
     if ($this->privateParams['debug'] && function_exists("ksm")) {
+      // phpcs:ignore Drupal.Functions.DiscouragedFunctions.Discouraged
       ksm($this->return_data);
       return [];
     }

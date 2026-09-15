@@ -18,7 +18,7 @@ function bc_api_example_install() {
   // Nationalities.
   $nationalities = bc_api_example_get_nationalities_data();
 
-  foreach ($nationalities as $label => &$nation) {
+  foreach ($nationalities as &$nation) {
     $term = Term::create([
       'name' => $nation['label'],
       'vid' => 'nationalities',
@@ -32,7 +32,7 @@ function bc_api_example_install() {
   // Ships.
   $ships = bc_api_example_get_ships_data();
 
-  foreach ($ships as $ship_id => &$ship) {
+  foreach ($ships as &$ship) {
     $node = Node::create([
       'type' => 'ship',
       'status' => 1,
@@ -47,7 +47,7 @@ function bc_api_example_install() {
   // Pirates.
   $pirates = bc_api_example_get_pirates_data();
 
-  foreach ($pirates as $pirate_id => &$pirate) {
+  foreach ($pirates as &$pirate) {
     $n_values = [];
     $s_values = [];
 

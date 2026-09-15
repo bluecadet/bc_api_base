@@ -5,7 +5,7 @@ namespace Drupal\bc_api_base\Annotation;
 use Drupal\Component\Annotation\Plugin;
 
 /**
- * Class Platform.
+ * Defines a Platform annotation object for Platform plugins.
  *
  * @package Drupal\bc_api_base\Annotation
  *

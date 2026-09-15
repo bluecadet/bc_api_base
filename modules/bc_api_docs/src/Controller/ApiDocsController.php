@@ -54,7 +54,7 @@ class ApiDocsController extends ControllerBase {
    */
   public function build(Request $request) {
 
-    // @todo: Why aren't these autoloaded???
+    // @todo Why aren't these autoloaded???
     new ApiDoc();
     new ApiBaseDoc();
     new ApiParam();
