@@ -1,0 +1,6 @@
+{
+  "name": "bluecadet/bc_api_logger",
+  "description": "Add logging functionality for API base.",
+  "type": "custom-drupal-module",
+  "license": "GPL-2.0+"
+}
