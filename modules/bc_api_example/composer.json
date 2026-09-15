@@ -1,0 +1,6 @@
+{
+  "name": "bluecadet/bc_api_example",
+  "description": "Example of how to setup an API Controller and Platform Plugin.",
+  "type": "custom-drupal-module",
+  "license": "GPL-2.0+"
+}

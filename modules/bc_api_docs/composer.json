@@ -1,0 +1,6 @@
+{
+  "name": "bluecadet/bc_api_docs",
+  "description": "Add documentation functionality for API.",
+  "type": "custom-drupal-module",
+  "license": "GPL-2.0+"
+}
