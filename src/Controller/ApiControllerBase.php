@@ -318,6 +318,8 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
 
     $this->platform = $platform;
     $this->transformer->setPlatform($platform);
+
+    return $platform;
   }
 
   /**
@@ -339,11 +341,11 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
 
     // Add in debugging. Trace param will take precedence over debug. Debug may
     // be removed in the future.
-    if ($this->request->get('trace') !== NULL) {
-      $this->privateParams['debug'] = filter_var($this->request->get('trace'), FILTER_VALIDATE_BOOLEAN);
+    if ($this->request->query->get('trace') !== NULL) {
+      $this->privateParams['debug'] = filter_var($this->request->query->get('trace'), FILTER_VALIDATE_BOOLEAN);
     }
     else {
-      $this->privateParams['debug'] = filter_var($this->request->get('debug'), FILTER_VALIDATE_BOOLEAN);
+      $this->privateParams['debug'] = filter_var($this->request->query->get('debug'), FILTER_VALIDATE_BOOLEAN);
     }
   }
 
@@ -353,9 +355,9 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
   public function autoParams() {
 
     // @TODO: Why aren't these autoloaded???
-    new ApiDoc([]);
-    new ApiBaseDoc([]);
-    new ApiParam([]);
+    new ApiDoc();
+    new ApiBaseDoc();
+    new ApiParam();
 
     $reader = new SimpleAnnotationReader();
     $reader->addNamespace('Drupal\bc_api_base\Annotation');
@@ -439,7 +441,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
     $this->request = $request;
 
     // Check if there's a platform parameter.
-    $this->setPlatform($request);
+    $this->setPlatform();
 
     $this->autoParams();
     $this->setParams();
@@ -502,7 +504,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
     $this->limit = ($request->query->get('limit')) ? $request->query->get('limit') : $this->limit;
 
     // Check if there's a platform parameter.
-    $this->setPlatform($request);
+    $this->setPlatform();
 
     $this->autoParams();
     $this->setParams();
@@ -573,7 +575,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
    * {@inheritdoc}
    */
   public function getResourceListQueryResult() {
-    $query = $this->entityTypeManager->getStorage('node')->getQuery();
+    $query = $this->entityTypeManager->getStorage('node')->getQuery()->accessCheck(TRUE);
 
     $count_query = clone $query;
 

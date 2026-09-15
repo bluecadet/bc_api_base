@@ -8,7 +8,7 @@ use Drupal\Core\Logger\LoggerChannelFactoryInterface;
 use Drupal\Core\ParamConverter\ParamNotConvertedException;
 use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\State\State;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
+use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -65,7 +65,7 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
   /**
    * {@inheritdoc}
    */
-  public function onException($event) {
+  public function onException(ExceptionEvent $event) {
     // Grab the exception.
     $exception = $event->getThrowable();
 
@@ -77,11 +77,11 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
 
     $format = $request->query->get(MainContentViewSubscriber::WRAPPER_FORMAT, $request->getRequestFormat());
 
-    if ($exception instanceof HttpExceptionInterface && empty($handled_formats) || in_array($format, $handled_formats)) {
+    if ($exception instanceof HttpExceptionInterface && (empty($handled_formats) || in_array($format, $handled_formats))) {
       $method = 'on' . $exception->getStatusCode();
       // Keep just the leading number of the status code to produce either a
       // on400 or a 500 method callback.
-      $method_fallback = 'on' . substr($exception->getStatusCode(), 0, 1) . 'xx';
+      $method_fallback = 'on' . substr((string) $exception->getStatusCode(), 0, 1) . 'xx';
       // We want to allow the method to be called and still not set a response
       // if it has additional filtering logic to determine when it will apply.
       // It is therefore the method's responsibility to set the response on the
@@ -132,10 +132,10 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
   /**
    * Redirects on 400 Bad Request kernel exceptions.
    *
-   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
    *   The Event to process.
    */
-  public function on400(RequestEvent $event) {
+  public function on400(ExceptionEvent $event) {
 
     $request = $event->getRequest();
     $path = $request->getPathInfo();
@@ -158,10 +158,10 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
   /**
    * Redirects on 403 Access Denied kernel exceptions.
    *
-   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
    *   The Event to process.
    */
-  public function on403(RequestEvent $event) {
+  public function on403(ExceptionEvent $event) {
 
     $request = $event->getRequest();
     $path = $request->getPathInfo();
@@ -185,10 +185,10 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
   /**
    * Redirects on 404 Not Found kernel exceptions.
    *
-   * @param \Symfony\Component\HttpKernel\Event\RequestEvent $event
+   * @param \Symfony\Component\HttpKernel\Event\ExceptionEvent $event
    *   The Event to process.
    */
-  public function on404(RequestEvent $event) {
+  public function on404(ExceptionEvent $event) {
 
     $request = $event->getRequest();
     $path = $request->getPathInfo();

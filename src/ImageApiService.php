@@ -43,8 +43,11 @@ class ImageApiService extends AssetApiServiceBase {
     $this->imageFactory = $image_factory;
     $this->configFactory = $config_factory;
 
-    // Load the focal point manager if it exists.
+    // focal_point is an optional integration -- look the service up at
+    // runtime rather than injecting it, since sites without the focal_point
+    // module installed have no such service to inject.
     // phpcs:ignore
+    // @phpstan-ignore-next-line
     $this->focalPointManager = (\Drupal::hasService('focal_point.manager')) ? \Drupal::service('focal_point.manager') : NULL;
   }
 
@@ -59,10 +62,15 @@ class ImageApiService extends AssetApiServiceBase {
       $data = NULL;
     }
     else {
-      $crop_type = $this->configFactory->get('focal_point.settings')->get('crop_type');
-      $crop = Crop::findCrop($file->getFileUri(), $crop_type);
-      if ($crop) {
-        $anchor = $this->focalPointManager->absoluteToRelative($crop->x->value, $crop->y->value, $image_file->getWidth(), $image_file->getHeight());
+      $anchor = [];
+      // Both focal_point and crop are optional -- only look up a crop if
+      // both the service and the class are actually available.
+      if ($this->focalPointManager && class_exists(Crop::class)) {
+        $crop_type = $this->configFactory->get('focal_point.settings')->get('crop_type');
+        $crop = Crop::findCrop($file->getFileUri(), $crop_type);
+        if ($crop) {
+          $anchor = $this->focalPointManager->absoluteToRelative($crop->x->value, $crop->y->value, $image_file->getWidth(), $image_file->getHeight());
+        }
       }
       $uri = $file->getFileUri();
       $url = $this->fileUrlGenerator->generateAbsoluteString($uri);

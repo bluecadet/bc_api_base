@@ -19,6 +19,14 @@
     "drupal/key_auth": "^1.0||^2.0",
     "oomphinc/composer-installers-extender": "^2.0"
   },
+  "require-dev": {
+    "drupal/crop": "^2.6",
+    "drupal/focal_point": "^2.1"
+  },
+  "suggest": {
+    "drupal/crop": "Required for ImageApiService to include focal-point crop data in image API responses.",
+    "drupal/focal_point": "Required for ImageApiService to include focal-point crop data in image API responses."
+  },
   "extra": {
     "bluecadet-package-manager": {
       "minimum_supported": [

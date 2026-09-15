@@ -55,9 +55,9 @@ class ApiDocsController extends ControllerBase {
   public function build(Request $request) {
 
     // @todo: Why aren't these autoloaded???
-    new ApiDoc([]);
-    new ApiBaseDoc([]);
-    new ApiParam([]);
+    new ApiDoc();
+    new ApiBaseDoc();
+    new ApiParam();
 
     $query = $this->database->select('router', 'r');
     $query->fields('r');

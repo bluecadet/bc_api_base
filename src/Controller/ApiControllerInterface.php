@@ -58,7 +58,7 @@ interface ApiControllerInterface {
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   Actual request.
    *
-   * @return \Symfony\Component\HttpFoundation\HttpResponse
+   * @return \Symfony\Component\HttpFoundation\Response
    *   An HTTP response.
    */
   public function getResource(Request $request);
@@ -69,7 +69,7 @@ interface ApiControllerInterface {
    * @param \Symfony\Component\HttpFoundation\Request $request
    *   Actual request.
    *
-   * @return \Symfony\Component\HttpFoundation\HttpResponse
+   * @return \Symfony\Component\HttpFoundation\Response
    *   An HTTP response.
    */
   public function getResourceList(Request $request);
@@ -81,7 +81,7 @@ interface ApiControllerInterface {
    * different types of responses, however, they can also alter the response
    * later, if they only need minor changes.
    *
-   * @return Symfony\Component\HttpFoundation\Response
+   * @return \Symfony\Component\HttpFoundation\Response
    *   The response object.
    */
   public function createResponse(): Response;

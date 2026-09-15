@@ -4,6 +4,8 @@ namespace Drupal\bc_api_base\Plugin\Platform;
 
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\bc_api_base\Plugin\PlatformInterface;
 use Drupal\bc_api_base\Plugin\PlatformTransformInterface;
@@ -14,9 +16,9 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class PlatformBase extends PluginBase implements PlatformInterface, PlatformTransformInterface, ContainerFactoryPluginInterface {
   /**
-   * Entity Manager.
+   * Entity Type Manager.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityManager;
 
@@ -30,7 +32,7 @@ class PlatformBase extends PluginBase implements PlatformInterface, PlatformTran
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, $entity_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_manager) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityManager = $entity_manager;
   }
@@ -285,6 +287,9 @@ class PlatformBase extends PluginBase implements PlatformInterface, PlatformTran
           $new_object[$property] = $this->applyPlatformTransformations($value);
         }
       }
+    }
+    else {
+      $new_object = $obj;
     }
 
     return $new_object;

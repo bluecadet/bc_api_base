@@ -132,10 +132,10 @@ class ResponseTests extends BrowserTestBase {
 
     // Check we have a proper result count.
     $pirates = bc_api_example_get_pirates_data();
-    $this->assertEquals($data->resultTotal, count($pirates), "Check count", "Pirates");
+    $this->assertEquals($data->resultTotal, count($pirates), "Check count: Pirates");
 
     // Check that we have cms_title key in response data.
-    $this->assertTrue(isset($data->data[0]->cms_title), "Check cms_title", "Pirates");
+    $this->assertTrue(isset($data->data[0]->cms_title), "Check cms_title: Pirates");
 
   }
 
