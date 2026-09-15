@@ -26,7 +26,7 @@ services:
 
   bc_api_base.image:
     class: Drupal\bc_api_base\ImageApiService
-    arguments: ['@file_url_generator', '@image.factory', '@config.factory']
+    arguments: ['@file_url_generator', '@image.factory', '@config.factory', '@entity_type.manager']
 
   bc_api_base.audio:
     class: Drupal\bc_api_base\AudioApiService

@@ -19,7 +19,7 @@ class ValueTransformationService {
   /**
    * The Platform Plugin needed for transformations.
    *
-   * @var \Drupal\bc_api_base\Plugin\PluginInspectionInterface
+   * @var \Drupal\bc_api_base\Plugin\PlatformTransformInterface
    */
   protected $plugin;
 

@@ -7,7 +7,6 @@ use Drupal\bc_api_base\Controller\ApiControllerBase;
 use Drupal\Core\Cache\CacheableJsonResponse;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Tests\UnitTestCase;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Unit Tests for CacheableJsonResponseTrait.
@@ -28,6 +27,9 @@ class CacheableJsonResponseTraitTest extends UnitTestCase {
         $this->return_data = $return_data;
       }
 
+      /**
+       * Sets cache tags directly for test setup.
+       */
       public function setCacheTags(array $tags) {
         $this->getCacheableMetadata()->setCacheTags($tags);
       }
@@ -37,13 +39,6 @@ class CacheableJsonResponseTraitTest extends UnitTestCase {
        */
       public function getCacheableMetadataPublic() {
         return $this->getCacheableMetadata();
-      }
-
-      /**
-       * Public wrapper for the protected cacheableJsonResponse method.
-       */
-      public function cacheableJsonResponsePublic(Response $response) {
-        return $this->cacheableJsonResponse($response);
       }
 
     };
@@ -70,7 +65,7 @@ class CacheableJsonResponseTraitTest extends UnitTestCase {
   }
 
   /**
-   * Tests that cacheableJsonResponse returns a CacheableJsonResponse.
+   * Tests that createResponse returns a CacheableJsonResponse.
    */
   public function testCreateResponseReturnsCacheableJsonResponse() {
     $controller = $this->getTestController(['baz' => 'qux']);

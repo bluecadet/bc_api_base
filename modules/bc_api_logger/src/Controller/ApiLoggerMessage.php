@@ -34,7 +34,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  *     @ApiParam(
  *       name = "channel",
  *       type = "bool",
- *       description = "The channel to log this to, but should be set to anything bc_api_**",
+ *       description = "The channel to log this to (any bc_api_* channel).",
  *       default = "bc_api_external",
  *     ),
  *   }

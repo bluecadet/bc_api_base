@@ -72,7 +72,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
    *
    * @var \Symfony\Component\DependencyInjection\ContainerInterface
    */
-  private $container;
+  protected $container;
 
   /**
    * The initial Request Object.
@@ -224,7 +224,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
    *
    * @var \Drupal\Core\State\State
    */
-  private $drupalState = [];
+  protected $drupalState = [];
 
   /**
    * Drupal State obj.
@@ -238,6 +238,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
    *
    * @var array
    */
+  // phpcs:ignore Drupal.NamingConventions.ValidVariableName.LowerCamelName
   protected $return_data;
 
   /**
@@ -252,7 +253,8 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
     CurrentRouteMatch $current_route,
     LoggerChannelFactoryInterface $factory,
     EntityTypeManagerInterface $entityTypeManager,
-    $drupal_state) {
+    $drupal_state,
+  ) {
 
     $this->container = $container;
     $this->assetService = $assetService;
@@ -318,6 +320,8 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
 
     $this->platform = $platform;
     $this->transformer->setPlatform($platform);
+
+    return $platform;
   }
 
   /**
@@ -339,11 +343,11 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
 
     // Add in debugging. Trace param will take precedence over debug. Debug may
     // be removed in the future.
-    if ($this->request->get('trace') !== NULL) {
-      $this->privateParams['debug'] = filter_var($this->request->get('trace'), FILTER_VALIDATE_BOOLEAN);
+    if ($this->request->query->get('trace') !== NULL) {
+      $this->privateParams['debug'] = filter_var($this->request->query->get('trace'), FILTER_VALIDATE_BOOLEAN);
     }
     else {
-      $this->privateParams['debug'] = filter_var($this->request->get('debug'), FILTER_VALIDATE_BOOLEAN);
+      $this->privateParams['debug'] = filter_var($this->request->query->get('debug'), FILTER_VALIDATE_BOOLEAN);
     }
   }
 
@@ -352,10 +356,10 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
    */
   public function autoParams() {
 
-    // @TODO: Why aren't these autoloaded???
-    new ApiDoc([]);
-    new ApiBaseDoc([]);
-    new ApiParam([]);
+    // @todo Why aren't these autoloaded???
+    new ApiDoc();
+    new ApiBaseDoc();
+    new ApiParam();
 
     $reader = new SimpleAnnotationReader();
     $reader->addNamespace('Drupal\bc_api_base\Annotation');
@@ -374,10 +378,10 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
 
     // Default params.
     $empty_query_bag = new ParameterBag([]);
-    list($this->defaultParams, $no_errors) = $this->queryValidation->validateQueryParams($annotations, $empty_query_bag);
+    [$this->defaultParams] = $this->queryValidation->validateQueryParams($annotations, $empty_query_bag);
 
     // Actual Params.
-    list($params, $errors) = $this->queryValidation->validateQueryParams($annotations, $this->request->query);
+    [$params, $errors] = $this->queryValidation->validateQueryParams($annotations, $this->request->query);
     $this->params = array_merge($this->params, $params);
 
     if (!empty($errors)) {
@@ -439,7 +443,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
     $this->request = $request;
 
     // Check if there's a platform parameter.
-    $this->setPlatform($request);
+    $this->setPlatform();
 
     $this->autoParams();
     $this->setParams();
@@ -479,6 +483,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
     }
 
     if ($this->privateParams['debug'] && function_exists("ksm")) {
+      // phpcs:ignore Drupal.Functions.DiscouragedFunctions.Discouraged
       ksm($this->return_data);
       return [];
     }
@@ -502,7 +507,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
     $this->limit = ($request->query->get('limit')) ? $request->query->get('limit') : $this->limit;
 
     // Check if there's a platform parameter.
-    $this->setPlatform($request);
+    $this->setPlatform();
 
     $this->autoParams();
     $this->setParams();
@@ -547,6 +552,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
     }
 
     if ($this->privateParams['debug'] && function_exists("ksm")) {
+      // phpcs:ignore Drupal.Functions.DiscouragedFunctions.Discouraged
       ksm($this->return_data);
       return [];
     }
@@ -573,7 +579,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
    * {@inheritdoc}
    */
   public function getResourceListQueryResult() {
-    $query = $this->entityTypeManager->getStorage('node')->getQuery();
+    $query = $this->entityTypeManager->getStorage('node')->getQuery()->accessCheck(TRUE);
 
     $count_query = clone $query;
 

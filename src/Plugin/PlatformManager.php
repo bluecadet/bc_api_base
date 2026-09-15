@@ -33,6 +33,8 @@ class PlatformManager extends DefaultPluginManager {
       'Drupal\bc_api_base\Plugin\PlatformInterface',
       'Drupal\bc_api_base\Annotation\Platform'
     );
+
+    $this->setCacheBackend($cache_backend, 'platform_plugins');
   }
 
 }

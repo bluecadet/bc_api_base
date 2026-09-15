@@ -4,6 +4,9 @@ namespace Drupal\bc_api_base\Plugin\Platform;
 
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\bc_api_base\Plugin\PlatformInterface;
 use Drupal\bc_api_base\Plugin\PlatformTransformInterface;
@@ -14,11 +17,18 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class PlatformBase extends PluginBase implements PlatformInterface, PlatformTransformInterface, ContainerFactoryPluginInterface {
   /**
-   * Entity Manager.
+   * Entity Type Manager.
    *
-   * @var \Drupal\Core\Entity\EntityManager
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
   protected $entityManager;
+
+  /**
+   * Config Factory.
+   *
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
+   */
+  protected $configFactory;
 
   /**
    * Cache storage configs in case we need them again.
@@ -30,9 +40,10 @@ class PlatformBase extends PluginBase implements PlatformInterface, PlatformTran
   /**
    * {@inheritdoc}
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, $entity_manager) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_manager, ConfigFactoryInterface $config_factory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityManager = $entity_manager;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -43,7 +54,8 @@ class PlatformBase extends PluginBase implements PlatformInterface, PlatformTran
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('config.factory')
     );
   }
 
@@ -195,7 +207,7 @@ class PlatformBase extends PluginBase implements PlatformInterface, PlatformTran
   public function createdChangedFieldVals($entity) {
 
     // Grab timezone config.
-    $config = \Drupal::config('system.date');
+    $config = $this->configFactory->get('system.date');
     $config_data_default_timezone = $config->get('timezone.default');
 
     $created_val = NULL;
@@ -205,6 +217,10 @@ class PlatformBase extends PluginBase implements PlatformInterface, PlatformTran
       $created_val = $created->format('Y-m-d\TH:i:s\Z');
     }
 
+    // getChangedTime() isn't part of the generic ContentEntityInterface, but
+    // is implemented by every entity type this is actually called with
+    // (nodes, taxonomy terms) via EntityChangedInterface.
+    // @phpstan-ignore-next-line
     $changed = DateTimePlus::createFromTimestamp($entity->getChangedTime(), $config_data_default_timezone);
 
     // Set Timezone to UTC.
@@ -221,8 +237,10 @@ class PlatformBase extends PluginBase implements PlatformInterface, PlatformTran
     $data = [];
 
     foreach ($vals as $val) {
-      // Process Text.
-      $unserializedText = unserialize($val['value']);
+      // Process Text. Disallow object instantiation -- this data only ever
+      // needs to be a scalar or array, and allowing arbitrary classes here
+      // would be a PHP object injection risk.
+      $unserializedText = unserialize($val['value'], ['allowed_classes' => FALSE]);
 
       // Check if unserialized data is FALSE, which breaks mobile parsing.
       $data[] = !$unserializedText ? NULL : $unserializedText;
@@ -285,6 +303,9 @@ class PlatformBase extends PluginBase implements PlatformInterface, PlatformTran
           $new_object[$property] = $this->applyPlatformTransformations($value);
         }
       }
+    }
+    else {
+      $new_object = $obj;
     }
 
     return $new_object;

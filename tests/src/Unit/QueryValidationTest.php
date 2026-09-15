@@ -15,15 +15,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  * @group bc_api_base
  * @group bc_api_base:unit
  */
-class QueryValidationTests extends UnitTestCase {
-
-  /**
-   * {@inheritdoc}
-   */
-  protected function setUp(): void {
-    // Nothing to do here.
-    parent::setUp();
-  }
+class QueryValidationTest extends UnitTestCase {
 
   /**
    * Test String param.

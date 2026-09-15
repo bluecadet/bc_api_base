@@ -19,14 +19,14 @@ class ApiCacheSettings extends FormBase {
    *
    * @var \Drupal\Core\Database\Connection
    */
-  private $database;
+  protected $database;
 
   /**
    * Drupal State obj.
    *
    * @var \Drupal\Core\State\State
    */
-  private $drupalState = [];
+  protected $drupalState = [];
 
   /**
    * Entity Query.

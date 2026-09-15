@@ -3,7 +3,7 @@
 namespace Drupal\bc_api_base\Plugin\Platform;
 
 /**
- * Class CinderPlatform.
+ * Platform plugin for the Cinder consuming app, stripping Cinder-only tags.
  *
  * @Platform(
  *    id = "cinder",
