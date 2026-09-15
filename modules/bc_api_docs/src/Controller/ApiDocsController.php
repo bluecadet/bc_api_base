@@ -22,7 +22,7 @@ class ApiDocsController extends ControllerBase {
    *
    * @var \Drupal\Core\Database\Connection
    */
-  private $database;
+  protected $database;
 
   /**
    * Entity Query.

@@ -30,7 +30,7 @@ class ApiSubscriber extends HttpExceptionSubscriberBase {
    *
    * @var \Drupal\Core\State\State
    */
-  private $drupalState = [];
+  protected $drupalState = [];
 
   /**
    * Drupal Logger.

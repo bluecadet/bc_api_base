@@ -72,7 +72,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
    *
    * @var \Symfony\Component\DependencyInjection\ContainerInterface
    */
-  private $container;
+  protected $container;
 
   /**
    * The initial Request Object.
@@ -224,7 +224,7 @@ class ApiControllerBase extends ControllerBase implements ApiControllerInterface
    *
    * @var \Drupal\Core\State\State
    */
-  private $drupalState = [];
+  protected $drupalState = [];
 
   /**
    * Drupal State obj.
